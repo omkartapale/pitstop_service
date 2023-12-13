@@ -8,28 +8,93 @@ class ServiceApp extends StatefulWidget {
 }
 
 class _ServiceAppState extends State<ServiceApp> {
+  // The contents of views
+  // Only the content associated with the selected tab is displayed on the screen
+  final List<Widget> _mainContents = [
+    // Content for Home tab
+    Card(
+      color: Colors.yellow.shade100,
+      shadowColor: Colors.transparent,
+      margin: const EdgeInsets.only(left: 8.0, right: 16.0),
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        child: const SizedBox.expand(
+          child: Text(
+            'Last Service Log',
+            style: TextStyle(fontSize: 34),
+          ),
+        ),
+      ),
+    ),
+
+    // Content for Vehicle Information tab
+    Card(
+      color: Colors.purple.shade100,
+      shadowColor: Colors.transparent,
+      margin: const EdgeInsets.only(left: 8.0, right: 16.0),
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        child: const SizedBox.expand(
+          child: Text(
+            'Vehicle Information',
+            style: TextStyle(fontSize: 34),
+          ),
+        ),
+      ),
+    ),
+
+    // Content for Contact tab
+    Card(
+      color: Colors.red.shade100,
+      shadowColor: Colors.transparent,
+      margin: const EdgeInsets.only(left: 8.0, right: 16.0),
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        alignment: Alignment.topLeft,
+        child: const Text(
+          'Contact KD\'s Pitstop',
+          style: TextStyle(fontSize: 34),
+        ),
+      ),
+    ),
+
+    // Content for History tab
+    Card(
+      shadowColor: Colors.transparent,
+      margin: const EdgeInsets.only(left: 8.0, right: 16.0),
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        alignment: Alignment.topLeft,
+        child: const Text(
+          'History',
+          style: TextStyle(fontSize: 34),
+        ),
+      ),
+    ),
+
+    //Content for About tab
+    const Card(
+      shadowColor: Colors.transparent,
+      margin: EdgeInsets.only(left: 8.0, right: 16.0),
+      child: SizedBox.expand(
+        child: Text(
+          'About',
+          // style: Theme.of(context).textTheme.titleLarge,
+          style: TextStyle(fontSize: 34),
+        ),
+      ),
+    ),
+  ];
+
+  // The index of the selected tab
+  // In the beginning, the Home tab is selected
   int _selectedIndex = 0;
-  NavigationRailLabelType labelType = NavigationRailLabelType.selected;
-  bool showLeading = false;
-  bool showTrailing = false;
-  bool extendedRail = false;
-  double groupAlignment = -1.0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: () {
-            setState(() {
-              labelType = extendedRail
-                  ? NavigationRailLabelType.selected
-                  : NavigationRailLabelType.none;
-              extendedRail = !extendedRail;
-            });
-          },
-        ),
+        leading: const Icon(Icons.published_with_changes, size: 24),
         leadingWidth: 80,
         title: const Text('KD\'s Pitstop Service'),
       ),
@@ -37,33 +102,32 @@ class _ServiceAppState extends State<ServiceApp> {
         child: Row(
           children: <Widget>[
             NavigationRail(
-              extended: extendedRail,
-              // minExtendedWidth: 160,
+              // leading:
+              //     IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
+              // trailing: FloatingActionButton(
+              //   elevation: 0,
+              //   onPressed: () {
+              //     // Add your onPressed code here!
+              //   },
+              //   child: const Icon(Icons.add),
+              // ),
+              // groupAlignment: 0,
               selectedIndex: _selectedIndex,
               onDestinationSelected: (int index) {
                 setState(() {
                   _selectedIndex = index;
                 });
               },
-              labelType: labelType,
-              leading: showLeading
-                  ? FloatingActionButton(
-                      elevation: 0,
-                      onPressed: () {
-                        // Add your onPressed code here!
-                      },
-                      child: const Icon(Icons.add),
-                    )
-                  : const SizedBox(),
+              labelType: NavigationRailLabelType.selected,
               destinations: const <NavigationRailDestination>[
-                NavigationRailDestination(
-                  icon: Icon(Icons.favorite_border),
-                  selectedIcon: Icon(Icons.favorite),
-                  label: Text('Service'),
-                ),
                 NavigationRailDestination(
                   icon: Badge(child: Icon(Icons.bookmark_border)),
                   selectedIcon: Badge(child: Icon(Icons.book)),
+                  label: Text('Service'),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.time_to_leave_outlined),
+                  selectedIcon: Icon(Icons.time_to_leave),
                   label: Text('Vehicle'),
                 ),
                 NavigationRailDestination(
@@ -83,63 +147,10 @@ class _ServiceAppState extends State<ServiceApp> {
                 ),
               ],
             ),
-            // const VerticalDivider(thickness: 1, width: 1),
-            // This is the main content.
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('selectedIndex: $_selectedIndex'),
-                  const SizedBox(height: 20),
-                  Text('Label type: ${labelType.name}'),
-                  const SizedBox(height: 10),
-                  OverflowBar(
-                    spacing: 10.0,
-                    children: <Widget>[
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            labelType = NavigationRailLabelType.none;
-                          });
-                        },
-                        child: const Text('None'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            labelType = NavigationRailLabelType.selected;
-                          });
-                        },
-                        child: const Text('Selected'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            labelType = NavigationRailLabelType.all;
-                          });
-                        },
-                        child: const Text('All'),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  OverflowBar(
-                    spacing: 10.0,
-                    children: <Widget>[
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            showLeading = !showLeading;
-                          });
-                        },
-                        child:
-                            Text(showLeading ? 'Hide Leading' : 'Show Leading'),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+            // Main content
+            // This part is always shown
+            // You will see it on both small and wide screen
+            Expanded(child: _mainContents[_selectedIndex]),
           ],
         ),
       ),
