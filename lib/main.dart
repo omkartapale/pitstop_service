@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pitstop_service/app.dart';
 
 void main() {
@@ -10,8 +11,12 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: ServiceApp(),
+    return MaterialApp(
+      theme: ThemeData(textTheme: GoogleFonts.poppinsTextTheme()),
+      // darkTheme: ThemeData.dark().copyWith(
+      //     textTheme: GoogleFonts.poppinsTextTheme(
+      //         ThemeData(brightness: Brightness.dark).textTheme)),
+      home: const ServiceApp(),
     );
   }
 }
