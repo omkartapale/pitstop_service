@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pitstop_service/pages/about.dart';
 
 class ServiceApp extends StatefulWidget {
   const ServiceApp({super.key});
@@ -73,17 +74,7 @@ class _ServiceAppState extends State<ServiceApp> {
     ),
 
     //Content for About tab
-    const Card(
-      shadowColor: Colors.transparent,
-      margin: EdgeInsets.only(left: 8.0, right: 16.0),
-      child: SizedBox.expand(
-        child: Text(
-          'About',
-          // style: Theme.of(context).textTheme.titleLarge,
-          style: TextStyle(fontSize: 34),
-        ),
-      ),
-    ),
+    const About()
   ];
 
   // The index of the selected tab
@@ -102,6 +93,14 @@ class _ServiceAppState extends State<ServiceApp> {
         child: Row(
           children: <Widget>[
             NavigationRail(
+              leading: Column(
+                children: [
+                  IconButton(
+                      icon: const Icon(Icons.published_with_changes),
+                      onPressed: () {}),
+                  const SizedBox(height: 8.0),
+                ],
+              ),
               // leading:
               //     IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
               // trailing: FloatingActionButton(
