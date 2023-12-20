@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pitstop_service/pages/about.dart';
+import 'package:pitstop_service/pages/history.dart';
 
 class ServiceApp extends StatefulWidget {
   const ServiceApp({super.key});
@@ -60,18 +61,7 @@ class _ServiceAppState extends State<ServiceApp> {
     ),
 
     // Content for History tab
-    Card(
-      shadowColor: Colors.transparent,
-      margin: const EdgeInsets.only(left: 8.0, right: 16.0),
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        alignment: Alignment.topLeft,
-        child: const Text(
-          'History',
-          style: TextStyle(fontSize: 34),
-        ),
-      ),
-    ),
+    const History(),
 
     //Content for About tab
     const About()
