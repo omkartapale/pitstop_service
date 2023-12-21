@@ -40,7 +40,7 @@ class History extends StatelessWidget {
                     isThreeLine: true,
                     title: Row(
                       children: [
-                        const Icon(Icons.calendar_month),
+                        const Icon(Icons.insert_invitation_rounded),
                         const SizedBox(width: 8.0),
                         Text(entries[index]),
                         const SizedBox(width: 24.0),

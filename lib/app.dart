@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pitstop_service/pages/about.dart';
+import 'package:pitstop_service/pages/contact.dart';
 import 'package:pitstop_service/pages/history.dart';
 
 class ServiceApp extends StatefulWidget {
@@ -46,19 +47,7 @@ class _ServiceAppState extends State<ServiceApp> {
     ),
 
     // Content for Contact tab
-    Card(
-      color: Colors.red.shade100,
-      shadowColor: Colors.transparent,
-      margin: const EdgeInsets.only(left: 8.0, right: 16.0),
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        alignment: Alignment.topLeft,
-        child: const Text(
-          'Contact KD\'s Pitstop',
-          style: TextStyle(fontSize: 34),
-        ),
-      ),
-    ),
+    const Contact(),
 
     // Content for History tab
     const History(),
