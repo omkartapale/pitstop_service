@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pitstop_service/pages/about.dart';
 import 'package:pitstop_service/pages/contact.dart';
 import 'package:pitstop_service/pages/history.dart';
+import 'package:pitstop_service/pages/last_service.dart';
 
 class ServiceApp extends StatefulWidget {
   const ServiceApp({super.key});
@@ -15,20 +16,7 @@ class _ServiceAppState extends State<ServiceApp> {
   // Only the content associated with the selected tab is displayed on the screen
   final List<Widget> _mainContents = [
     // Content for Home tab
-    Card(
-      color: Colors.yellow.shade100,
-      shadowColor: Colors.transparent,
-      margin: const EdgeInsets.only(left: 8.0, right: 16.0),
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        child: const SizedBox.expand(
-          child: Text(
-            'Last Service Log',
-            style: TextStyle(fontSize: 34),
-          ),
-        ),
-      ),
-    ),
+    const LastService(),
 
     // Content for Vehicle Information tab
     Card(

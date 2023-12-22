@@ -18,3 +18,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    # Add assets from the directory to the application.
+    - assets/
