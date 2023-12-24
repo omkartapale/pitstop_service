@@ -22,3 +22,4 @@ flutter:
   assets:
     # Add assets from the directory to the application.
     - assets/
+    - google_fonts/
