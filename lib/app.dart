@@ -3,6 +3,7 @@ import 'package:pitstop_service/pages/about.dart';
 import 'package:pitstop_service/pages/contact.dart';
 import 'package:pitstop_service/pages/history.dart';
 import 'package:pitstop_service/pages/last_service.dart';
+import 'package:pitstop_service/pages/vehicle_info.dart';
 
 class ServiceApp extends StatefulWidget {
   const ServiceApp({super.key});
@@ -19,20 +20,7 @@ class _ServiceAppState extends State<ServiceApp> {
     const LastService(),
 
     // Content for Vehicle Information tab
-    Card(
-      color: Colors.purple.shade100,
-      shadowColor: Colors.transparent,
-      margin: const EdgeInsets.only(left: 8.0, right: 16.0),
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        child: const SizedBox.expand(
-          child: Text(
-            'Vehicle Information',
-            style: TextStyle(fontSize: 34),
-          ),
-        ),
-      ),
-    ),
+    const VehicleInfo(),
 
     // Content for Contact tab
     const Contact(),
