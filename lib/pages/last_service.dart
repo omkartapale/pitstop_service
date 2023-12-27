@@ -12,7 +12,7 @@ class LastService extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             child: Text(
-              'Last Service Log',
+              'Service dashboard',
               style: Theme.of(context).textTheme.displaySmall,
             ),
           ),
@@ -51,7 +51,7 @@ class LastService extends StatelessWidget {
               Expanded(
                 flex: 1,
                 child: Card(
-                  color: Colors.yellow.shade100,
+                  color: Colors.red.shade100,
                   shadowColor: Colors.transparent,
                   margin: const EdgeInsets.only(left: 8.0, right: 8.0),
                   child: Container(
@@ -59,9 +59,18 @@ class LastService extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Due Service',
-                          style: Theme.of(context).textTheme.titleLarge,
+                        Row(
+                          children: [
+                            Text(
+                              'Due Service',
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                            const SizedBox(width: 8.0),
+                            const Icon(
+                              Icons.error_outline_rounded,
+                              color: Colors.deepOrange,
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 16.0),
                         Row(
@@ -216,6 +225,7 @@ class LastService extends StatelessWidget {
               ),
             ],
           ),
+          const SizedBox(height: 8.0),
         ],
       ),
     );

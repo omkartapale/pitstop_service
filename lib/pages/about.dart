@@ -31,7 +31,7 @@ class _AboutState extends State<About> {
         Container(
           padding: const EdgeInsets.all(8),
           child: Text(
-            'About',
+            'About KD\'s software',
             style: Theme.of(context).textTheme.displaySmall,
           ),
         ),
@@ -50,13 +50,13 @@ class _AboutState extends State<About> {
                     onTap: _incrementCounter,
                     splashColor: Colors.transparent,
                     highlightColor: Colors.transparent,
-                    child: const FlutterLogo(size: 80),
+                    child: Image.asset('assets/logo.png'),
                   ),
-                  const SizedBox(height: 8.0),
-                  Text(
-                    'KD\'s Pitstop',
-                    style: Theme.of(context).textTheme.displaySmall,
-                  ),
+                  // const SizedBox(height: 8.0),
+                  // Text(
+                  //   'KD\'s Pitstop',
+                  //   style: Theme.of(context).textTheme.displaySmall,
+                  // ),
                   Text(
                     'Service Log Application',
                     style: Theme.of(context).textTheme.titleLarge,
@@ -88,6 +88,7 @@ class _AboutState extends State<About> {
             ),
           ),
         ),
+        const SizedBox(height: 8.0),
       ],
     );
   }

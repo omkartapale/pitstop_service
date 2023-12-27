@@ -16,7 +16,7 @@ class VehicleInfo extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             child: Text(
-              'Vehicle Specifications',
+              'Vehicle specifications',
               style: Theme.of(context).textTheme.displaySmall,
             ),
           ),
@@ -397,6 +397,7 @@ class VehicleInfo extends StatelessWidget {
               ),
             ],
           ),
+          const SizedBox(height: 8.0),
         ],
       ),
     );

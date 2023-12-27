@@ -18,7 +18,7 @@ class History extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(8),
           child: Text(
-            'History',
+            'Vehicle service log',
             style: Theme.of(context).textTheme.displaySmall,
           ),
         ),
@@ -82,6 +82,7 @@ class History extends StatelessWidget {
             ),
           ),
         ),
+        const SizedBox(height: 8.0),
       ],
     );
   }

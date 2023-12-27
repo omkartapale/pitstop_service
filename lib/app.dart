@@ -40,7 +40,14 @@ class _ServiceAppState extends State<ServiceApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const Icon(Icons.published_with_changes, size: 24),
+        leading: IconButton(
+          icon: const Icon(Icons.published_with_changes),
+          onPressed: () {
+            setState(() {
+              _selectedIndex = 0;
+            });
+          },
+        ),
         leadingWidth: 80,
         title: const Text('KD\'s Pitstop Service'),
       ),
@@ -48,14 +55,14 @@ class _ServiceAppState extends State<ServiceApp> {
         child: Row(
           children: <Widget>[
             NavigationRail(
-              leading: Column(
-                children: [
-                  IconButton(
-                      icon: const Icon(Icons.published_with_changes),
-                      onPressed: () {}),
-                  const SizedBox(height: 8.0),
-                ],
-              ),
+              // leading: Column(
+              //   children: [
+              //     IconButton(
+              //         icon: const Icon(Icons.published_with_changes),
+              //         onPressed: () {}),
+              //     const SizedBox(height: 8.0),
+              //   ],
+              // ),
               // leading:
               //     IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
               // trailing: FloatingActionButton(
@@ -80,8 +87,8 @@ class _ServiceAppState extends State<ServiceApp> {
                   label: Text('Service'),
                 ),
                 NavigationRailDestination(
-                  icon: Icon(Icons.time_to_leave_outlined),
-                  selectedIcon: Icon(Icons.time_to_leave),
+                  icon: Badge(child: Icon(Icons.time_to_leave_outlined)),
+                  selectedIcon: Badge(child: Icon(Icons.time_to_leave)),
                   label: Text('Vehicle'),
                 ),
                 NavigationRailDestination(
