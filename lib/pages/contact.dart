@@ -1,7 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Contact extends StatelessWidget {
   const Contact({super.key});
+
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(scheme: 'tel', path: phoneNumber);
+
+    if (await canLaunchUrl(launchUri)) {
+      launchUrl(launchUri);
+    } else {
+      throw 'Calling not supported on this device\nCould not launch $launchUri';
+    }
+  }
+
+  Future<void> _launchMap() async {
+    final map = Uri.parse('https://maps.app.goo.gl/476usahhoGYFtZ32A');
+
+    if (await canLaunchUrl(map)) {
+      launchUrl(map);
+    } else {
+      throw 'Could not launch $map';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,12 +92,12 @@ class Contact extends StatelessWidget {
                         Wrap(
                           children: [
                             TextButton.icon(
-                              onPressed: () {},
+                              onPressed: () => _makePhoneCall('8554851010'),
                               icon: const Icon(Icons.phone),
                               label: const Text('Call'),
                             ),
                             TextButton.icon(
-                              onPressed: () {},
+                              onPressed: _launchMap,
                               icon: const Icon(Icons.directions),
                               label: const Text('Directions'),
                             ),
@@ -120,7 +141,7 @@ class Contact extends StatelessWidget {
                         subtitle: const Text('Relative\n'
                             '+91 987 654 3210'),
                         trailing: IconButton.filled(
-                          onPressed: () {},
+                          onPressed: () => _makePhoneCall('9876543210'),
                           color: Colors.white,
                           icon: const Icon(Icons.phone),
                         ),
@@ -140,7 +161,7 @@ class Contact extends StatelessWidget {
                         subtitle: const Text('Friend\n'
                             '+91 987 654 3210'),
                         trailing: IconButton.filled(
-                          onPressed: () {},
+                          onPressed: () => _makePhoneCall('9876543210'),
                           color: Colors.white,
                           icon: const Icon(Icons.phone),
                         ),
@@ -162,7 +183,7 @@ class Contact extends StatelessWidget {
                       //     '+91 855 485 1010',
                       //   ),
                       //   trailing: IconButton.filled(
-                      //     onPressed: () {},
+                      //     onPressed: () => _makePhoneCall('8554851010'),
                       //     color: Colors.white,
                       //     icon: const Icon(Icons.phone),
                       //   ),
@@ -176,7 +197,7 @@ class Contact extends StatelessWidget {
                           '1033',
                         ),
                         trailing: IconButton.filled(
-                          onPressed: () {},
+                          onPressed: () => _makePhoneCall('1033'),
                           color: Colors.white,
                           icon: const Icon(Icons.phone),
                         ),
