@@ -109,7 +109,7 @@ class LastService extends StatelessWidget {
                           'Suggestions'.toUpperCase(),
                           style: Theme.of(context).textTheme.labelSmall,
                         ),
-                        OverflowBar(
+                        Wrap(
                           spacing: 8.0,
                           children: [
                             Chip(
@@ -192,7 +192,7 @@ class LastService extends StatelessWidget {
                           'Worknotes'.toUpperCase(),
                           style: Theme.of(context).textTheme.labelSmall,
                         ),
-                        OverflowBar(
+                        Wrap(
                           spacing: 8.0,
                           children: [
                             Chip(
