@@ -1,27 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:pitstop_service/model/emergency_contact.dart';
+import 'package:pitstop_service/widgets/update_emergency_contact.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class Contact extends StatelessWidget {
+class Contact extends StatefulWidget {
   const Contact({super.key});
 
-  Future<void> _makePhoneCall(String phoneNumber) async {
-    final Uri launchUri = Uri(scheme: 'tel', path: phoneNumber);
+  @override
+  State<Contact> createState() => _ContactState();
+}
 
-    if (await canLaunchUrl(launchUri)) {
-      launchUrl(launchUri);
-    } else {
-      throw 'Calling not supported on this device\nCould not launch $launchUri';
-    }
-  }
+class _ContactState extends State<Contact> {
+  late EmergencyContact primary;
+  late EmergencyContact secondary;
 
-  Future<void> _launchMap() async {
-    final map = Uri.parse('https://maps.app.goo.gl/476usahhoGYFtZ32A');
+  @override
+  void initState() {
+    // Initialize primary and secondary contacts
+    primary = const EmergencyContact(
+        name: 'Person Name',
+        relation: ContactRelation.relative,
+        number: '9876543210');
+    secondary = const EmergencyContact(
+        name: 'Person Name',
+        relation: ContactRelation.friend,
+        number: '9876543211');
 
-    if (await canLaunchUrl(map)) {
-      launchUrl(map);
-    } else {
-      throw 'Could not launch $map';
-    }
+    super.initState();
   }
 
   @override
@@ -137,43 +142,29 @@ class Contact extends StatelessWidget {
                       ),
                       ListTile(
                         leading: const Icon(Icons.person_outline_rounded),
-                        title: const Text('Person Name'),
-                        subtitle: const Text('Relative\n'
-                            '+91 987 654 3210'),
+                        title: Text(primary.name),
+                        subtitle: Text('${primary.relation.value}\n'
+                            '+91 ${primary.number}'),
                         trailing: IconButton.filled(
-                          onPressed: () => _makePhoneCall('9876543210'),
+                          onPressed: () => _makePhoneCall(primary.number),
                           color: Colors.white,
                           icon: const Icon(Icons.phone),
                         ),
-                        onLongPress: () {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                            content: Text(
-                              'Edit emergency contact',
-                              textAlign: TextAlign.center,
-                            ),
-                          ));
-                        },
+                        onLongPress: () =>
+                            _updateEmergencyContact(context, primary),
                       ),
                       ListTile(
                         leading: const Icon(Icons.person_outline_rounded),
-                        title: const Text('Person Name'),
-                        subtitle: const Text('Friend\n'
-                            '+91 987 654 3210'),
+                        title: Text(secondary.name),
+                        subtitle: Text('${secondary.relation.value}\n'
+                            '+91 ${secondary.number}'),
                         trailing: IconButton.filled(
-                          onPressed: () => _makePhoneCall('9876543210'),
+                          onPressed: () => _makePhoneCall(secondary.number),
                           color: Colors.white,
                           icon: const Icon(Icons.phone),
                         ),
-                        onLongPress: () {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                            content: Text(
-                              'Edit emergency contact',
-                              textAlign: TextAlign.center,
-                            ),
-                          ));
-                        },
+                        onLongPress: () =>
+                            _updateEmergencyContact(context, secondary),
                       ),
                       // ListTile(
                       //   leading: const Icon(Icons.car_repair),
@@ -211,6 +202,39 @@ class Contact extends StatelessWidget {
           ),
           const SizedBox(height: 8.0),
         ],
+      ),
+    );
+  }
+
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(scheme: 'tel', path: phoneNumber);
+
+    if (await canLaunchUrl(launchUri)) {
+      launchUrl(launchUri);
+    } else {
+      throw 'Calling not supported on this device\nCould not launch $launchUri';
+    }
+  }
+
+  Future<void> _launchMap() async {
+    final map = Uri.parse('https://maps.app.goo.gl/476usahhoGYFtZ32A');
+
+    if (await canLaunchUrl(map)) {
+      launchUrl(map);
+    } else {
+      throw 'Could not launch $map';
+    }
+  }
+
+  Future<void> _updateEmergencyContact(
+      BuildContext context, EmergencyContact contact) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        icon: const Icon(Icons.emergency_outlined),
+        title: const Text("Update Emergency Contact"),
+        content: EmergencyContactForm(contact: contact),
+        scrollable: true,
       ),
     );
   }
