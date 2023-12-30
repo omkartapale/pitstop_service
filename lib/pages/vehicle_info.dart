@@ -1,14 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:o3d/o3d.dart';
 
-class VehicleInfo extends StatelessWidget {
+class VehicleInfo extends StatefulWidget {
   const VehicleInfo({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // to control the animation
-    O3DController controller = O3DController();
+  State<VehicleInfo> createState() => _VehicleInfoState();
+}
 
+class _VehicleInfoState extends State<VehicleInfo> {
+  // to control the animation
+  O3DController controller = O3DController();
+
+  late DateTime fitnessExpiry;
+
+  @override
+  void initState() {
+    fitnessExpiry = DateTime.fromMillisecondsSinceEpoch(1949941800000);
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -293,16 +308,23 @@ class VehicleInfo extends StatelessWidget {
                                   Row(
                                     children: [
                                       Text(
-                                        '17 Oct \'31',
+                                        DateFormat("dd MMM ''yy")
+                                            .format(fitnessExpiry),
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleSmall,
                                       ),
                                       const SizedBox(width: 8.0),
-                                      const Icon(
-                                        Icons.check_circle_outline_rounded,
-                                        color: Colors.green,
-                                      ),
+                                      _isFitnessNearExpiry
+                                          ? const Icon(
+                                              Icons.error_outline_rounded,
+                                              color: Colors.deepOrange,
+                                            )
+                                          : const Icon(
+                                              Icons
+                                                  .check_circle_outline_rounded,
+                                              color: Colors.green,
+                                            ),
                                       // const Spacer(),
                                     ],
                                   ),
@@ -313,7 +335,7 @@ class VehicleInfo extends StatelessWidget {
                               iconSize: 16,
                               padding: const EdgeInsets.all(0),
                               visualDensity: VisualDensity.compact,
-                              onPressed: () {},
+                              onPressed: () => _updateRC(context),
                               icon: const Icon(Icons.edit_calendar_outlined),
                             ),
                             const SizedBox(width: 16.0),
@@ -401,5 +423,39 @@ class VehicleInfo extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  /// Update Vehicle RC Fitness Validity Date Dialog
+  ///
+  /// Shows a Date Picker
+  ///
+  /// Once a new date is selected / provided, vehicle fitness date is updated
+  /// and check for [_isFitnessNearExpiry] to set status for new date.
+  Future<void> _updateRC(BuildContext context) {
+    return showDatePicker(
+      context: context,
+      currentDate: DateTime.now(),
+      // firstDate: DateTime(2016, 10, 17), // registration date or todays date can be good too
+      firstDate: DateTime
+          .now(), // todays date can be good too as prevents past dated entry
+      lastDate:
+          DateTime(2041, 10, 17), // Approx last renewed expiry / disposal date
+      initialDate: fitnessExpiry, // current expiry date
+      helpText: 'Update Fitness',
+      confirmText: 'Update',
+      fieldLabelText: 'Valid upto',
+    ).then((pickedDate) {
+      if (pickedDate != null) {
+        setState(() {
+          fitnessExpiry = pickedDate;
+        });
+      }
+    });
+  }
+
+  /// Checks if the vehicle fitness is less than or equal to 30 days
+  /// close to expiry or expired already.
+  bool get _isFitnessNearExpiry {
+    return fitnessExpiry.difference(DateTime.now()).inDays <= 30;
   }
 }
