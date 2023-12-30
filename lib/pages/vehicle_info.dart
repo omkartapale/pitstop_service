@@ -13,12 +13,14 @@ class _VehicleInfoState extends State<VehicleInfo> {
   // to control the animation
   O3DController controller = O3DController();
 
-  late DateTime fitnessExpiry;
+  late DateTime fitnessExpiry, insuranceExpiry, pucExpiry;
 
   @override
   void initState() {
+    // initiate vital dates for vehicle
     fitnessExpiry = DateTime.fromMillisecondsSinceEpoch(1949941800000);
-
+    insuranceExpiry = DateTime.fromMillisecondsSinceEpoch(1729103400000);
+    pucExpiry = DateTime.fromMillisecondsSinceEpoch(1702751400000);
     super.initState();
   }
 
@@ -352,16 +354,23 @@ class _VehicleInfoState extends State<VehicleInfo> {
                                   Row(
                                     children: [
                                       Text(
-                                        '17 Oct \'24',
+                                        DateFormat("dd MMM ''yy")
+                                            .format(insuranceExpiry),
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleSmall,
                                       ),
                                       const SizedBox(width: 8.0),
-                                      const Icon(
-                                        Icons.check_circle_outline_rounded,
-                                        color: Colors.green,
-                                      ),
+                                      _isInsuranceNearExpiry
+                                          ? const Icon(
+                                              Icons.error_outline_rounded,
+                                              color: Colors.deepOrange,
+                                            )
+                                          : const Icon(
+                                              Icons
+                                                  .check_circle_outline_rounded,
+                                              color: Colors.green,
+                                            ),
                                     ],
                                   ),
                                 ],
@@ -371,7 +380,7 @@ class _VehicleInfoState extends State<VehicleInfo> {
                               iconSize: 16,
                               padding: const EdgeInsets.all(0),
                               visualDensity: VisualDensity.compact,
-                              onPressed: () {},
+                              onPressed: () => _updateInsurance(context),
                               icon: const Icon(Icons.edit_calendar_outlined),
                             ),
                             const SizedBox(width: 16.0),
@@ -388,16 +397,23 @@ class _VehicleInfoState extends State<VehicleInfo> {
                                   Row(
                                     children: [
                                       Text(
-                                        '02 Apr \'24',
+                                        DateFormat("dd MMM ''yy")
+                                            .format(pucExpiry),
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleSmall,
                                       ),
                                       const SizedBox(width: 8.0),
-                                      const Icon(
-                                        Icons.error_outline_rounded,
-                                        color: Colors.deepOrange,
-                                      ),
+                                      _isPucNearExpiry
+                                          ? const Icon(
+                                              Icons.error_outline_rounded,
+                                              color: Colors.deepOrange,
+                                            )
+                                          : const Icon(
+                                              Icons
+                                                  .check_circle_outline_rounded,
+                                              color: Colors.green,
+                                            ),
                                     ],
                                   ),
                                 ],
@@ -407,7 +423,7 @@ class _VehicleInfoState extends State<VehicleInfo> {
                               iconSize: 16,
                               padding: const EdgeInsets.all(0),
                               visualDensity: VisualDensity.compact,
-                              onPressed: () {},
+                              onPressed: () => _updatePUC(context),
                               icon: const Icon(Icons.edit_calendar_outlined),
                             ),
                           ],
@@ -425,7 +441,7 @@ class _VehicleInfoState extends State<VehicleInfo> {
     );
   }
 
-  /// Update Vehicle RC Fitness Validity Date Dialog
+  /// Vehicle RC Fitness Validity Date update dialog
   ///
   /// Shows a Date Picker
   ///
@@ -436,13 +452,11 @@ class _VehicleInfoState extends State<VehicleInfo> {
       context: context,
       currentDate: DateTime.now(),
       // firstDate: DateTime(2016, 10, 17), // registration date or todays date can be good too
-      firstDate: DateTime
-          .now(), // todays date can be good too as prevents past dated entry
-      lastDate:
-          DateTime(2041, 10, 17), // Approx last renewed expiry / disposal date
+      firstDate: DateTime(2023), // 1st Jan 2023
+      lastDate: DateTime(2100, 12, 31), // 31st Dec 2100
       initialDate: fitnessExpiry, // current expiry date
-      helpText: 'Update Fitness',
-      confirmText: 'Update',
+      helpText: 'Vehicle Fitness',
+      confirmText: 'Update Fitness',
       fieldLabelText: 'Valid upto',
     ).then((pickedDate) {
       if (pickedDate != null) {
@@ -453,9 +467,73 @@ class _VehicleInfoState extends State<VehicleInfo> {
     });
   }
 
+  /// Vehicle Insurance Expiry Date update dialog
+  ///
+  /// Shows a Date Picker
+  ///
+  /// Once a new date is selected / provided, vehicle insurance expiry date
+  /// is updated and check for [_isInsuranceNearExpiry] to set status for
+  /// new date.
+  Future<void> _updateInsurance(BuildContext context) {
+    return showDatePicker(
+      context: context,
+      currentDate: DateTime.now(),
+      // firstDate: insuranceExpiry, // current expiry date
+      firstDate: DateTime(2023), // 1st Jan 2023
+      lastDate: DateTime(2100, 12, 31), // 31st Dec 2100
+      initialDate: insuranceExpiry, // current expiry date
+      helpText: 'Insurance',
+      confirmText: 'Update Insurance',
+      fieldLabelText: 'Valid upto',
+    ).then((pickedDate) {
+      if (pickedDate != null) {
+        setState(() {
+          insuranceExpiry = pickedDate;
+        });
+      }
+    });
+  }
+
+  /// Vehicle Pollution Check Validity Date update dialog
+  ///
+  /// Shows a Date Picker
+  ///
+  /// Once a new date is selected / provided, vehicle PUC expiry date is
+  /// updated and check for [_isPucNearExpiry] to set status for new date.
+  Future<void> _updatePUC(BuildContext context) {
+    return showDatePicker(
+      context: context,
+      currentDate: DateTime.now(),
+      firstDate: DateTime(2023), // 1st Jan 2023
+      lastDate: DateTime(2100, 12, 31), // 31st Dec 2100
+      initialDate: pucExpiry, // current expiry date
+      helpText: 'Pollution Check',
+      confirmText: 'Update PUC',
+      fieldLabelText: 'Valid upto',
+    ).then((pickedDate) {
+      if (pickedDate != null) {
+        setState(() {
+          pucExpiry = pickedDate;
+        });
+      }
+    });
+  }
+
   /// Checks if the vehicle fitness is less than or equal to 30 days
   /// close to expiry or expired already.
   bool get _isFitnessNearExpiry {
     return fitnessExpiry.difference(DateTime.now()).inDays <= 30;
+  }
+
+  /// Checks if the vehicle insurance is less than or equal to 30 days
+  /// close to expiry or expired already.
+  bool get _isInsuranceNearExpiry {
+    return insuranceExpiry.difference(DateTime.now()).inDays <= 30;
+  }
+
+  /// Checks if the vehicle pollution check is less than or equal to 30 days
+  /// close to expiry or expired already.
+  bool get _isPucNearExpiry {
+    return pucExpiry.difference(DateTime.now()).inDays <= 30;
   }
 }
