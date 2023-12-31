@@ -25,71 +25,77 @@ class _AboutState extends State<About> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          child: Text(
-            'About KD\'s software',
-            style: Theme.of(context).textTheme.displaySmall,
+    return Container(
+      alignment: Alignment.topLeft,
+      padding: const EdgeInsets.only(left: 4.0, right: 12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
+            child: Text(
+              'About KD\'s software',
+              style: Theme.of(context).textTheme.displaySmall,
+            ),
           ),
-        ),
-        Expanded(
-          child: Card(
-            shadowColor: Colors.transparent,
-            margin: const EdgeInsets.only(left: 8.0, right: 16.0),
-            child: Container(
-              padding: const EdgeInsets.all(16.0),
-              alignment: Alignment.center,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                // crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  InkWell(
-                    onTap: _incrementCounter,
-                    splashColor: Colors.transparent,
-                    highlightColor: Colors.transparent,
-                    child: Image.asset('assets/logo.png'),
+          Expanded(
+            child: Card(
+              shadowColor: Colors.transparent,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                alignment: Alignment.center,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    // crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      InkWell(
+                        onTap: _incrementCounter,
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        child: Image.asset('assets/logo.png'),
+                      ),
+                      // const SizedBox(height: 8.0),
+                      // Text(
+                      //   'KD\'s Pitstop',
+                      //   style: Theme.of(context).textTheme.displaySmall,
+                      // ),
+                      Text(
+                        'Service Log Application',
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      const SizedBox(height: 16.0),
+                      const Text(
+                        '\u00a9 2024 Tech4Geek Solutions',
+                        // style: Theme.of(context).textTheme.displaySmall,
+                      ),
+                      const Text(
+                        'Version: 2023.12.31',
+                        // style: Theme.of(context).textTheme.displaySmall,
+                      ),
+                      // const Spacer(),
+                      TextButton.icon(
+                        onPressed: () {
+                          showLicensePage(
+                            context: context,
+                            applicationName: 'KD\'s Pitstop Service Log',
+                            // applicationVersion: 'Dec 2023',
+                            applicationLegalese:
+                                '\u00a9 2023 Tech4Geek Solutions',
+                          );
+                        },
+                        icon: const Icon(Icons.workspace_premium),
+                        label: const Text('Open-Source licenses'),
+                      ),
+                    ],
                   ),
-                  // const SizedBox(height: 8.0),
-                  // Text(
-                  //   'KD\'s Pitstop',
-                  //   style: Theme.of(context).textTheme.displaySmall,
-                  // ),
-                  Text(
-                    'Service Log Application',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  const SizedBox(height: 16.0),
-                  const Text(
-                    '\u00a9 2023 Tech4Geek Solutions',
-                    // style: Theme.of(context).textTheme.displaySmall,
-                  ),
-                  const Text(
-                    'Version: 2023.12.13',
-                    // style: Theme.of(context).textTheme.displaySmall,
-                  ),
-                  // const Spacer(),
-                  TextButton.icon(
-                    onPressed: () {
-                      showLicensePage(
-                        context: context,
-                        applicationName: 'KD\'s Pitstop Service Log',
-                        // applicationVersion: 'Dec 2023',
-                        applicationLegalese: '\u00a9 2023 Tech4Geek Solutions',
-                      );
-                    },
-                    icon: const Icon(Icons.workspace_premium),
-                    label: const Text('Open-Source licenses'),
-                  ),
-                ],
+                ),
               ),
             ),
           ),
-        ),
-        const SizedBox(height: 8.0),
-      ],
+          const SizedBox(height: 12.0),
+        ],
+      ),
     );
   }
 
