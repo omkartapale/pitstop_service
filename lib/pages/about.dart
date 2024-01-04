@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pitstop_service/super/super_app.dart';
 
 class About extends StatefulWidget {
   const About({super.key});
@@ -115,14 +116,16 @@ class _AboutState extends State<About> {
                   label: Text('Enter PIN'), isDense: true, filled: true),
               onSubmitted: (value) => {
                 now = DateTime.now(),
+                Navigator.pop(ctx),
                 if (value == '${now.hour}${now.minute}')
                   {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text(
-                        'Reset all',
-                        textAlign: TextAlign.center,
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (context) => const SuperApp(),
                       ),
-                    )),
+                      (Route<dynamic> route) => false,
+                    ),
                   }
                 else
                   {
@@ -133,7 +136,6 @@ class _AboutState extends State<About> {
                       ),
                     )),
                   },
-                Navigator.pop(ctx),
               },
             ),
           ],
