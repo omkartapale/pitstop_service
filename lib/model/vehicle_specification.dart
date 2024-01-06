@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 /// Fuel Types Enum
 enum FuelType {
   /// Petrol Fuel
@@ -40,6 +42,35 @@ enum FuelType {
   final String value;
 }
 
+/// Parse string to FuelType enum.
+///
+/// Convert string [value] to FuelType enum. Useful to parse string value from
+/// stored json.
+///
+/// Searches for enum name matching with the [value] param and
+/// return the first matching enum element, if no match found for named value
+/// in enum then returns the first element of enum as default.
+///
+/// Example:
+/// ``` dart
+/// enum FuelType {petrol, diesel};
+/// var FuelType fuel;
+/// fuel = stringToFuelType('petrol');    // Returns FuelType.petrol
+/// fuel = stringToFuelType('diesel');    // Returns FuelType.diesel
+/// fuel = stringToFuelType('biodiesel'); // No-match: Returns FuelType.petrol
+/// ```
+///
+/// Iterates through enum elements and returns the first element that satisfies
+/// the given predicate [value]. If no element satisfies [value], the first
+/// element of FuelType enum i.e. [FuelType.petrol] is returned.
+FuelType stringToFuelType(String value) {
+  return FuelType.values.firstWhere(
+    // (element) => element.toString().split('.').last == value,
+    (element) => element.name == value,
+    orElse: () => FuelType.values.first,
+  );
+}
+
 /// Transmission Types Enum
 enum Transmission {
   /// Manual Transmission
@@ -53,6 +84,37 @@ enum Transmission {
 
   const Transmission(this.value);
   final String value;
+}
+
+/// Parse string to Transmission enum.
+///
+/// Convert string [value] to Transmission enum. Useful to parse string value
+/// from stored json.
+///
+/// Searches for enum name matching with the [value] param and
+/// return the first matching enum element, if no match found for named value
+/// in enum then returns the first element of enum as default.
+///
+/// Example:
+/// ``` dart
+/// enum Transmission {manual, automatic};
+/// var Transmission result;
+/// result = stringToTransmission('manual');  // Returns Transmission.manual
+/// result =
+///   stringToTransmission('automatic');      // Returns Transmission.automatic
+/// result =
+///   stringToTransmission('sports');         // No-match: Returns Transmission.manual
+/// ```
+///
+/// Iterates through enum elements and returns the first element that satisfies
+/// the given predicate [value]. If no element satisfies [value], the first
+/// element of Transmission enum i.e. [Transmission.manual] is returned.
+Transmission stringToTransmission(String value) {
+  return Transmission.values.firstWhere(
+    // (element) => element.toString().split('.').last == value,
+    (element) => element.name == value,
+    orElse: () => Transmission.manual,
+  );
 }
 
 /// **Vehicle Specification Model class**
@@ -173,8 +235,8 @@ class VehicleSpecification {
       model: json['model'],
       variant: json['variant'],
       makeYear: json['makeYear'],
-      transmission: json['transmission'],
-      fuel: json['fuel'],
+      transmission: stringToTransmission(json['transmission']),
+      fuel: stringToFuelType(json['fuel']),
       licensePlate: json['licensePlate'],
       maxPower: json['maxPower'],
       capacity: json['capacity'],
@@ -194,8 +256,8 @@ class VehicleSpecification {
     data['model'] = model;
     data['variant'] = variant;
     data['makeYear'] = makeYear;
-    data['transmission'] = transmission;
-    data['fuel'] = fuel;
+    data['transmission'] = transmission.name;
+    data['fuel'] = fuel.name;
     data['licensePlate'] = licensePlate;
     data['maxPower'] = maxPower;
     data['capacity'] = capacity;
@@ -223,3 +285,29 @@ final VehicleSpecification demoVehicleSpec = VehicleSpecification(
   insuranceValidUpto: DateTime.fromMillisecondsSinceEpoch(1729103400000),
   pucValidUpto: DateTime.fromMillisecondsSinceEpoch(1702751400000),
 );
+
+/// Demo JSON string representing instance of [VehicleSpecification] class.
+const demoVehicleSpecJsonString = '''
+{
+  "manufacturer": "Volkswagen",
+  "model": "Ameo",
+  "variant": "1.2L MPI Highline",
+  "makeYear": 2016,
+  "transmission": "manual",
+  "fuel": "petrol",
+  "licensePlate": "MH11 BV 8183",
+  "maxPower": "74bhp @ 5400rpm",
+  "capacity": "1198cc",
+  "cylinder": "3 Inline, SOHC",
+  "fitnessValidUpto": 1949941800000,
+  "insuranceValidUpto": 1729103400000,
+  "pucValidUpto": 1702751400000
+}
+''';
+
+/// Demo instance from JSON string
+///
+/// Deserialize JSON string [demoVehicleSpecJsonString], parse and create
+/// demo instance of [VehicleSpecification] class.
+final VehicleSpecification jsonDemoVehicleSpec =
+    VehicleSpecification.fromJson(json.decode(demoVehicleSpecJsonString));

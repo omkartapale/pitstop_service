@@ -44,7 +44,8 @@ class _SuperVehicleSpecificationFormState
   @override
   initState() {
     // Initialize vehicles spec object
-    vSpec = demoVehicleSpec;
+    vSpec = jsonDemoVehicleSpec;
+    // vSpec = demoVehicleSpec;
 
     // Populate controllers and state vars with vehicle specifications
     _manufacturerController.text = vSpec.manufacturer;
