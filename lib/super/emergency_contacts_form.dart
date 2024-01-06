@@ -34,14 +34,10 @@ class _SuperEmergencyContactsFormState
   @override
   void initState() {
     // Initialize primary and secondary contacts
-    primary = const EmergencyContact(
-        name: 'Primary Person',
-        relation: ContactRelation.relative,
-        number: '9876543210');
-    secondary = const EmergencyContact(
-        name: 'Secondary Person',
-        relation: ContactRelation.friend,
-        number: '9876543211');
+    // primary = demoPrimary;
+    // secondary = demoSecondary;
+    primary = jsonDemoPrimaryContact;
+    secondary = jsonDemoSecondaryContact;
 
     // Init controllers for primary contact
     _primaryNameController.text = primary.name;
@@ -185,7 +181,7 @@ class _SuperEmergencyContactsFormState
                                   child: DropdownButton<ContactRelation>(
                                     value: _primaryContactRelation,
                                     isDense: true,
-                                    onChanged: <SpareType>(newValue) {
+                                    onChanged: <ContactRelation>(newValue) {
                                       setState(() {
                                         _primaryContactRelation = newValue;
                                         state.didChange(newValue);
@@ -196,11 +192,7 @@ class _SuperEmergencyContactsFormState
                                         return DropdownMenuItem<
                                             ContactRelation>(
                                           value: options,
-                                          child: Text(
-                                            options.value,
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.normal),
-                                          ),
+                                          child: Text(options.value),
                                         );
                                       },
                                     ).toList(),
@@ -277,7 +269,7 @@ class _SuperEmergencyContactsFormState
                                   child: DropdownButton<ContactRelation>(
                                     value: _secondaryContactRelation,
                                     isDense: true,
-                                    onChanged: <SpareType>(newValue) {
+                                    onChanged: <ContactRelation>(newValue) {
                                       setState(() {
                                         _secondaryContactRelation = newValue;
                                         state.didChange(newValue);
@@ -288,11 +280,7 @@ class _SuperEmergencyContactsFormState
                                         return DropdownMenuItem<
                                             ContactRelation>(
                                           value: options,
-                                          child: Text(
-                                            options.value,
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.normal),
-                                          ),
+                                          child: Text(options.value),
                                         );
                                       },
                                     ).toList(),
