@@ -20,7 +20,8 @@ class _SuperServiceLogsState extends State<SuperServiceLogs> {
   void initState() {
     // Initialize history list of service logs
     // serviceHistory = [];
-    serviceHistory = demoListServiceLogs.reversed.toList();
+    // serviceHistory = demoListServiceLogs.reversed.toList();
+    serviceHistory = jsonDemoListServiceLogs.reversed.toList();
     super.initState();
   }
 
@@ -230,7 +231,9 @@ class _SuperServiceLogsState extends State<SuperServiceLogs> {
                                     ),
                                   ],
                                 ),
-                                onLongPress: () => _showBottomSheetForm(
+                                onLongPress: () =>
+                                    _confirmDelete(context, serviceLogItem),
+                                onTap: () => _showBottomSheetForm(
                                     context, serviceLogItem),
                               );
                             },
@@ -280,6 +283,47 @@ class _SuperServiceLogsState extends State<SuperServiceLogs> {
           ),
         );
       },
+    );
+  }
+
+  Future<void> _confirmDelete(BuildContext context, ServiceLog serviceLog) {
+    final ThemeData theme = Theme.of(context);
+    final TextStyle textStyle = theme.textTheme.bodyMedium!;
+    return showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete service log?'),
+        content: RichText(
+          text: TextSpan(
+            children: <TextSpan>[
+              TextSpan(
+                  style: textStyle,
+                  text: 'Once you delete, you will not be able to retrieve '
+                      'this in future. \n\nAre you sure to delete service '
+                      'logged on ${DateFormat("dd MMM yyyy").format(serviceLog.lastServiceDate)} at ${serviceLog.lastOdometer}km?'),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+            },
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                'Deleted service logged on ${DateFormat("dd MMM ''yy").format(serviceLog.lastServiceDate)} at ${serviceLog.lastOdometer}km.',
+                textAlign: TextAlign.center,
+              )));
+            },
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
     );
   }
 }
