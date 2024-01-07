@@ -67,38 +67,27 @@ class _SuperEmergencyContactsFormState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.popUntil(
-              context,
-              ModalRoute.withName('/'),
-            );
-          },
-          icon: const Icon(Icons.terminal),
-        ),
         title: const Text('\$sudo'),
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.pushAndRemoveUntil(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute<void>(
                   builder: (BuildContext context) =>
                       const SuperVehicleSpecificationForm(),
                 ),
-                ModalRoute.withName('/'),
               );
             },
             icon: const Icon(Icons.type_specimen),
           ),
           IconButton(
             onPressed: () {
-              Navigator.pushAndRemoveUntil(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute<void>(
                   builder: (BuildContext context) => const SuperServiceLogs(),
                 ),
-                ModalRoute.withName('/'),
               );
             },
             icon: const Icon(Icons.warehouse),

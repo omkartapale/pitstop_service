@@ -93,24 +93,6 @@ class _SuperVehicleSpecificationFormState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            // TODO(omkartapale): Moving back to super dashboard making trouble.
-            Navigator.popUntil(
-              context,
-              ModalRoute.withName('/'),
-            );
-
-            // Navigator.pushAndRemoveUntil(
-            //   context,
-            //   MaterialPageRoute<void>(
-            //     builder: (BuildContext context) => const SuperApp(),
-            //   ),
-            //   ModalRoute.withName('/'),
-            // );
-          },
-          icon: const Icon(Icons.terminal),
-        ),
         title: const Text('\$sudo'),
         actions: [
           IconButton.filledTonal(
@@ -119,25 +101,23 @@ class _SuperVehicleSpecificationFormState
           ),
           IconButton(
             onPressed: () {
-              Navigator.pushAndRemoveUntil(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute<void>(
                   builder: (BuildContext context) => const SuperServiceLogs(),
                 ),
-                ModalRoute.withName('/'),
               );
             },
             icon: const Icon(Icons.warehouse),
           ),
           IconButton(
             onPressed: () {
-              Navigator.pushAndRemoveUntil(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute<void>(
                   builder: (BuildContext context) =>
                       const SuperEmergencyContactsForm(),
                 ),
-                ModalRoute.withName('/'),
               );
             },
             icon: const Icon(Icons.emergency),
