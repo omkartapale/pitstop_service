@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pitstop_service/notifiers/app_data_notifier.dart';
+import 'package:provider/provider.dart';
 
 /// Widget Class: Renders Due Service card for dashboard
 class DueServiceCard extends StatefulWidget {
@@ -26,7 +28,13 @@ class _DueServiceCardState extends State<DueServiceCard> {
   @override
   void initState() {
     // initialize
-    dueServiceDate = DateTime(2024, 1, 24);
+    dueServiceDate = context
+        .read<AppDataNotifier>()
+        .appData
+        .serviceHistory
+        .last
+        .dueServiceDate;
+    // dueServiceDate = DateTime(2024, 1, 24);
     dueOdometer = 1600;
     suggestions = 'Gear Oil,Throttle Cleanup'
         .split(',')

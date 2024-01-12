@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:pitstop_service/notifiers/app_data_notifier.dart';
 import 'package:pitstop_service/widgets/due_service_card.dart';
 import 'package:pitstop_service/widgets/last_service_card.dart';
 import 'package:pitstop_service/widgets/vehicle_registration_info.dart';
+import 'package:provider/provider.dart';
 
 class LastService extends StatelessWidget {
   const LastService({super.key});
@@ -24,10 +26,18 @@ class LastService extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16.0),
-            const VehicleRegistrationInfoBox(
-              manufacturer: 'Volkswagen',
-              model: 'Ameo',
-              registrationNumber: 'MH11 BV 8183',
+            VehicleRegistrationInfoBox(
+              manufacturer: context
+                  .watch<AppDataNotifier>()
+                  .appData
+                  .vehicleSpec
+                  .manufacturer,
+              model: context.watch<AppDataNotifier>().appData.vehicleSpec.model,
+              registrationNumber: context
+                  .watch<AppDataNotifier>()
+                  .appData
+                  .vehicleSpec
+                  .licensePlate,
             ),
             if (MediaQuery.of(context).size.width < 600)
               const Column(

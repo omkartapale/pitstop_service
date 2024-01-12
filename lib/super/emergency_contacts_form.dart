@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pitstop_service/model/emergency_contact.dart';
+import 'package:pitstop_service/notifiers/app_data_notifier.dart';
 import 'package:pitstop_service/super/service_logs.dart';
 import 'package:pitstop_service/super/vehicle_spec_form.dart';
+import 'package:provider/provider.dart';
 
 class SuperEmergencyContactsForm extends StatefulWidget {
   const SuperEmergencyContactsForm({super.key});
@@ -36,8 +38,10 @@ class _SuperEmergencyContactsFormState
     // Initialize primary and secondary contacts
     // primary = demoPrimary;
     // secondary = demoSecondary;
-    primary = jsonDemoPrimaryContact;
-    secondary = jsonDemoSecondaryContact;
+    primary = context.read<AppDataNotifier>().appData.primaryContact;
+    // primary = jsonDemoPrimaryContact;
+    secondary = context.read<AppDataNotifier>().appData.secondaryContact;
+    // secondary = jsonDemoSecondaryContact;
 
     // Init controllers for primary contact
     _primaryNameController.text = primary.name;
