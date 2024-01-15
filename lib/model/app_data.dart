@@ -41,6 +41,25 @@ class AppData {
   /// AppData model, after updating app in future.
   final int version;
 
+  /// Get last vehicle service information.
+  ///
+  /// Returns last service details from vehicle's service history,
+  /// or null if the history is empty.
+  ServiceLog? get lastServiceLog => serviceHistory.lastOrNull;
+
+  /// Get vehicle service due alert status.
+  ///
+  /// Checks if last service log is not null and the vehicle service is due for
+  /// less than or equal to 30 days from today or already passed and returns
+  /// true, else returns false.
+  bool get serviceDueAlertStatus {
+    if (lastServiceLog != null) {
+      return lastServiceLog!.dueServiceDate.difference(DateTime.now()).inDays <=
+          30;
+    }
+    return false;
+  }
+
   /// Factory constructor for creating a new [AppData] instance
   /// from a map.
   factory AppData.fromJson(Map<String, dynamic> json) {
@@ -88,13 +107,13 @@ final AppData demoAppData = AppData(
 const demoAppDataJsonString = '''
 {
   "vehicleSpec": {
-    "manufacturer": "Volkswagen",
-    "model": "Ameo",
+    "manufacturer": "Make",
+    "model": "Car",
     "variant": "1.2L MPI Highline",
     "makeYear": 2016,
     "transmission": "manual",
     "fuel": "petrol",
-    "licensePlate": "MH11 BV 8183",
+    "licensePlate": "MH11 A 1010",
     "maxPower": "74bhp @ 5400rpm",
     "capacity": "1198cc",
     "cylinder": "3 Inline, SOHC",
@@ -104,33 +123,9 @@ const demoAppDataJsonString = '''
   },
   "serviceHistory": [
     {
-      "lastServiceDate": 1597190400000,
-      "lastOdometer": 1000,
-      "worknotes": "Brake Oil, Brake Pas, Engine Tuneup",
-      "dueServiceDate": 1628467200000,
-      "dueOdometer": 2000,
-      "suggestions": "Brake Oil, Calliper Pin"
-    },
-    {
-      "lastServiceDate": 1631145600000,
-      "lastOdometer": 2000,
-      "worknotes": "Brake Oil, Brake Pas, Engine Tuneup",
-      "dueServiceDate": 1659052800000,
-      "dueOdometer": 3000,
-      "suggestions": "Brake Oil, Calliper Pin"
-    },
-    {
-      "lastServiceDate": 1664582400000,
-      "lastOdometer": 3000,
-      "worknotes": "Brake Oil, Brake Pas, Engine Tuneup",
-      "dueServiceDate": 1685491200000,
-      "dueOdometer": 4000,
-      "suggestions": "Brake Oil, Calliper Pin"
-    },
-    {
       "lastServiceDate": 1686528000000,
       "lastOdometer": 4000,
-      "worknotes": "Brake Oil, Brake Pas, Engine Tuneup",
+      "worknotes": "Brake Oil, Brake Pads, Engine Tuneup",
       "dueServiceDate": 1699747200000,
       "dueOdometer": 5000,
       "suggestions": "Brake Oil, Calliper Pin"
@@ -138,7 +133,7 @@ const demoAppDataJsonString = '''
     {
       "lastServiceDate": 1699747200000,
       "lastOdometer": 5000,
-      "worknotes": "Brake Oil, Brake Pas, Engine Tuneup",
+      "worknotes": "Brake Oil, Throttle Cleaning, Engine Tuneup",
       "dueServiceDate": 1710201600000,
       "dueOdometer": 6000,
       "suggestions": "Brake Oil, Calliper Pin"
