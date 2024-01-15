@@ -45,7 +45,7 @@ class _SuperAppState extends State<SuperApp> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
                 child: Text(
-                  'Super User Walkthrough',
+                  'Vehicle Onboarding',
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ),

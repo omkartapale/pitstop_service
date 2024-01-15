@@ -313,27 +313,14 @@ class _SuperEmergencyContactsFormState
                       spacing: 8.0,
                       children: [
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            _saveForm(context);
+                            Navigator.pop(context);
+                          },
                           child: const Text('Save & Exit'),
                         ),
                         FilledButton(
-                          onPressed: () {
-                            // Validate will return true if the form is valid, or false if
-                            // the form is invalid.
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState!.save();
-
-                              // Process data.
-
-                              setState(() {});
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(
-                                      content: Text(
-                                'Emergency contacts updated.',
-                                textAlign: TextAlign.center,
-                              )));
-                            }
-                          },
+                          onPressed: () => _saveForm(context),
                           child: const Text('Save'),
                         ),
                       ],
@@ -347,5 +334,46 @@ class _SuperEmergencyContactsFormState
         ),
       ),
     );
+  }
+
+  void _saveForm(BuildContext context) {
+    // Validate will return true if the form is valid, or false if
+    // the form is invalid.
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      // Remove form field focus and hide keyboard.
+      FocusManager.instance.primaryFocus?.unfocus();
+      // FocusScope.of(context).nearestScope.unfocus();
+      // FocusScope.of(context).enclosingScope?.unfocus();
+
+      // Process data.
+      setState(() {
+        // Prepare primary contact object with new data for processing
+        primary = EmergencyContact(
+          name: _primaryNameController.text.trim(),
+          relation: _primaryContactRelation,
+          number: _primaryNumberController.text.trim(),
+        );
+        // Prepare secondary contact object with new data for processing
+        secondary = EmergencyContact(
+          name: _secondaryNameController.text.trim(),
+          relation: _secondaryContactRelation,
+          number: _secondaryNumberController.text.trim(),
+        );
+      });
+
+      // Update and persist the emergency contacts
+      context.read<AppDataNotifier>().saveEmergencyContact(
+            primary: primary,
+            secondary: secondary,
+          );
+
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+        'Emergency contacts updated.',
+        textAlign: TextAlign.center,
+      )));
+    }
   }
 }

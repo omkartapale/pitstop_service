@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pitstop_service/helpers/contact_helper.dart';
 import 'package:pitstop_service/model/emergency_contact.dart';
+import 'package:pitstop_service/notifiers/app_data_notifier.dart';
 import 'package:pitstop_service/widgets/update_emergency_contact.dart';
+import 'package:provider/provider.dart';
 
 /// Widget Class: Renders Emergency contacts card
-class EmergencyContactsCard extends StatefulWidget {
+class EmergencyContactsCard extends StatelessWidget {
   /// Emergency contacts details widget
   ///
   /// Renders Card UI to provides emergency contact details. Primary and
@@ -13,28 +15,6 @@ class EmergencyContactsCard extends StatefulWidget {
   ///
   /// Long press on primary and secondary contact to edit.
   const EmergencyContactsCard({super.key});
-
-  @override
-  State<EmergencyContactsCard> createState() => _EmergencyContactsCardState();
-}
-
-class _EmergencyContactsCardState extends State<EmergencyContactsCard> {
-  late EmergencyContact primary;
-  late EmergencyContact secondary;
-
-  @override
-  void initState() {
-    // Initialize primary and secondary contacts
-    primary = const EmergencyContact(
-        name: 'Person Name',
-        relation: ContactRelation.relative,
-        number: '9876543210');
-    secondary = const EmergencyContact(
-        name: 'Person Name',
-        relation: ContactRelation.friend,
-        number: '9876543211');
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,29 +42,40 @@ class _EmergencyContactsCardState extends State<EmergencyContactsCard> {
               ],
             ),
           ),
-          ListTile(
-            leading: const Icon(Icons.person_outline_rounded),
-            title: Text(primary.name),
-            subtitle: Text('${primary.relation.value}\n'
-                '+91 ${primary.number}'),
-            trailing: IconButton.filled(
-              onPressed: () => ContactHelper.makePhoneCall(primary.number),
-              color: Colors.white,
-              icon: const Icon(Icons.phone),
+          Consumer<AppDataNotifier>(
+            builder: (context, dataStore, child) => ListTile(
+              leading: const Icon(Icons.person_outline_rounded),
+              title: Text(dataStore.appData.primaryContact.name),
+              subtitle:
+                  Text('${dataStore.appData.primaryContact.relation.value}\n'
+                      '+91 ${dataStore.appData.primaryContact.number}'),
+              trailing: IconButton.filled(
+                onPressed: () => ContactHelper.makePhoneCall(
+                    dataStore.appData.primaryContact.number),
+                color: Colors.white,
+                icon: const Icon(Icons.phone),
+              ),
+              onLongPress: () => _updateEmergencyContact(
+                  context, dataStore.appData.primaryContact, true),
             ),
-            onLongPress: () => _updateEmergencyContact(context, primary),
           ),
-          ListTile(
-            leading: const Icon(Icons.person_outline_rounded),
-            title: Text(secondary.name),
-            subtitle: Text('${secondary.relation.value}\n'
-                '+91 ${secondary.number}'),
-            trailing: IconButton.filled(
-              onPressed: () => ContactHelper.makePhoneCall(secondary.number),
-              color: Colors.white,
-              icon: const Icon(Icons.phone),
+
+          Consumer<AppDataNotifier>(
+            builder: (context, dataStore, child) => ListTile(
+              leading: const Icon(Icons.person_outline_rounded),
+              title: Text(dataStore.appData.secondaryContact.name),
+              subtitle:
+                  Text('${dataStore.appData.secondaryContact.relation.value}\n'
+                      '+91 ${dataStore.appData.secondaryContact.number}'),
+              trailing: IconButton.filled(
+                onPressed: () => ContactHelper.makePhoneCall(
+                    dataStore.appData.secondaryContact.number),
+                color: Colors.white,
+                icon: const Icon(Icons.phone),
+              ),
+              onLongPress: () => _updateEmergencyContact(
+                  context, dataStore.appData.secondaryContact, false),
             ),
-            onLongPress: () => _updateEmergencyContact(context, secondary),
           ),
           // ListTile(
           //   leading: const Icon(Icons.car_repair),
@@ -124,7 +115,7 @@ class _EmergencyContactsCardState extends State<EmergencyContactsCard> {
   /// Loads [EmergencyContactForm] with details of supplied [contact] in form
   /// to update.
   Future<void> _updateEmergencyContact(
-      BuildContext context, EmergencyContact contact) {
+      BuildContext context, EmergencyContact contact, bool isPrimaryContact) {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -132,6 +123,7 @@ class _EmergencyContactsCardState extends State<EmergencyContactsCard> {
         title: const Text("Update Emergency Contact"),
         content: EmergencyContactForm(
           contact: contact,
+          isPrimaryContact: isPrimaryContact,
         ),
         scrollable: true,
       ),
