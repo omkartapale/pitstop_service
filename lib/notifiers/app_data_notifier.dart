@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:pitstop_service/model/app_data.dart';
 import 'package:pitstop_service/model/emergency_contact.dart';
+import 'package:pitstop_service/model/vehicle_specification.dart';
 import 'package:pitstop_service/services/app_data_service.dart';
 
 /// A class that many Widgets can interact with to read [AppData], update on
@@ -53,15 +54,139 @@ class AppDataNotifier with ChangeNotifier {
     notifyListeners();
   }
 
-  /// Save the Emergency Contacts
+  /// Update the Vehicle Fitness Expiry Date.
+  ///
+  /// Creates a temporary instance of [AppData] with new vehicle specification
+  /// instance updated with new Fitness expiry [date] but rest old data and
+  /// [save] this instance to local file storage.
+  Future<void> updateFitnessDate(DateTime date) async {
+    // Prepare new AppData instance with updated information
+    AppData newAppData = AppData(
+      // Prepare new vehicle specification instance with updated fitness date
+      vehicleSpec: VehicleSpecification(
+        manufacturer: _appData.vehicleSpec.manufacturer,
+        model: _appData.vehicleSpec.model,
+        variant: _appData.vehicleSpec.variant,
+        makeYear: _appData.vehicleSpec.makeYear,
+        transmission: _appData.vehicleSpec.transmission,
+        fuel: _appData.vehicleSpec.fuel,
+        licensePlate: _appData.vehicleSpec.licensePlate,
+        maxPower: _appData.vehicleSpec.maxPower,
+        capacity: _appData.vehicleSpec.capacity,
+        cylinder: _appData.vehicleSpec.cylinder,
+        fitnessValidUpto: date,
+        insuranceValidUpto: _appData.vehicleSpec.insuranceValidUpto,
+        pucValidUpto: _appData.vehicleSpec.pucValidUpto,
+      ),
+      serviceHistory: _appData.serviceHistory,
+      primaryContact: _appData.primaryContact,
+      secondaryContact: _appData.secondaryContact,
+      version: _appData.version,
+    );
+
+    // Persist the changes to a local file storage.
+    await save(newAppData);
+  }
+
+  /// Update the Insurance Expiry Date.
+  ///
+  /// Creates a temporary instance of [AppData] with new vehicle specification
+  /// instance updated with new Insurance expiry [date] but rest old data and
+  /// [save] this instance to local file storage.
+  Future<void> updateInsuranceDate(DateTime date) async {
+    // Prepare new AppData instance with updated information
+    AppData newAppData = AppData(
+      // Prepare new vehicle specification instance with updated insurance date
+      vehicleSpec: VehicleSpecification(
+        manufacturer: _appData.vehicleSpec.manufacturer,
+        model: _appData.vehicleSpec.model,
+        variant: _appData.vehicleSpec.variant,
+        makeYear: _appData.vehicleSpec.makeYear,
+        transmission: _appData.vehicleSpec.transmission,
+        fuel: _appData.vehicleSpec.fuel,
+        licensePlate: _appData.vehicleSpec.licensePlate,
+        maxPower: _appData.vehicleSpec.maxPower,
+        capacity: _appData.vehicleSpec.capacity,
+        cylinder: _appData.vehicleSpec.cylinder,
+        fitnessValidUpto: _appData.vehicleSpec.fitnessValidUpto,
+        insuranceValidUpto: date,
+        pucValidUpto: _appData.vehicleSpec.pucValidUpto,
+      ),
+      serviceHistory: _appData.serviceHistory,
+      primaryContact: _appData.primaryContact,
+      secondaryContact: _appData.secondaryContact,
+      version: _appData.version,
+    );
+
+    // Persist the changes to a local file storage.
+    await save(newAppData);
+  }
+
+  /// Update the Pollution Validity Date.
+  ///
+  /// Creates a temporary instance of [AppData] with new vehicle specification
+  /// instance updated with new PUC expiry [date] but rest old data and
+  /// [save] this instance to local file storage.
+  Future<void> updatePucDate(DateTime date) async {
+    // Prepare new AppData instance with updated information
+    AppData newAppData = AppData(
+      // Prepare new vehicle specification instance with updated fitness date
+      vehicleSpec: VehicleSpecification(
+        manufacturer: _appData.vehicleSpec.manufacturer,
+        model: _appData.vehicleSpec.model,
+        variant: _appData.vehicleSpec.variant,
+        makeYear: _appData.vehicleSpec.makeYear,
+        transmission: _appData.vehicleSpec.transmission,
+        fuel: _appData.vehicleSpec.fuel,
+        licensePlate: _appData.vehicleSpec.licensePlate,
+        maxPower: _appData.vehicleSpec.maxPower,
+        capacity: _appData.vehicleSpec.capacity,
+        cylinder: _appData.vehicleSpec.cylinder,
+        fitnessValidUpto: _appData.vehicleSpec.fitnessValidUpto,
+        insuranceValidUpto: _appData.vehicleSpec.insuranceValidUpto,
+        pucValidUpto: date,
+      ),
+      serviceHistory: _appData.serviceHistory,
+      primaryContact: _appData.primaryContact,
+      secondaryContact: _appData.secondaryContact,
+      version: _appData.version,
+    );
+
+    // Persist the changes to a local file storage.
+    await save(newAppData);
+  }
+
+  /// Save the Vehicle Specification Information.
+  ///
+  /// Update and persist the [VehicleSpecification] in a local file storage.
+  ///
+  /// Prepares a temporary instance of [AppData] with new a vehicle specification
+  /// instance but rest old data and [save] this instance to local file storage.
+  Future<void> saveVehicleSpecifications(
+      VehicleSpecification vehicleSpec) async {
+    // Prepare new AppData instance with updated information
+    AppData newAppData = AppData(
+      vehicleSpec: vehicleSpec,
+      serviceHistory: _appData.serviceHistory,
+      primaryContact: _appData.primaryContact,
+      secondaryContact: _appData.secondaryContact,
+      version: _appData.version,
+    );
+
+    // Persist the changes to a local file storage.
+    await save(newAppData);
+  }
+
+  /// Save the Emergency Contacts.
   ///
   /// Update and persist the [EmergencyContact] in a local file storage.
   ///
   /// Check if either of [primary] and [secondary] contact provided or both
   /// provided while calling this method, else return.
   ///
-  /// If primary or secondary [EmergencyContact] is provided then create a new
-  /// instance of [AppData] update and [save] this instance to local file storage.
+  /// If primary or secondary [EmergencyContact] is provided then create a
+  /// temporary instance of [AppData] updates to emergency contacts according
+  /// to params supplied and [save] this instance to local file storage.
   Future<void> saveEmergencyContact(
       {EmergencyContact? primary, EmergencyContact? secondary}) async {
     // Check if either of primary and secondary contact supplied

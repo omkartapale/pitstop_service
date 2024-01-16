@@ -87,21 +87,35 @@ class _ServiceAppState extends State<ServiceApp> {
                   icon: (context
                           .watch<AppDataNotifier>()
                           .appData
-                          .serviceDueAlertStatus)
-                      ? const Badge(child: Icon(Icons.bookmark_border))
+                          .showServiceDueAlert)
+                      ? const Badge(
+                          label: Text('!'),
+                          padding: EdgeInsets.symmetric(horizontal: 6.0),
+                          child: Icon(Icons.bookmark_border),
+                        )
                       : const Icon(Icons.bookmark_border),
                   selectedIcon: (context
                           .watch<AppDataNotifier>()
                           .appData
-                          .serviceDueAlertStatus)
+                          .showServiceDueAlert)
                       ? const Badge(child: Icon(Icons.book))
                       : const Icon(Icons.book),
                   label: const Text('Service'),
                 ),
-                const NavigationRailDestination(
-                  icon: Badge(child: Icon(Icons.time_to_leave_outlined)),
-                  selectedIcon: Badge(child: Icon(Icons.time_to_leave)),
-                  label: Text('Vehicle'),
+                NavigationRailDestination(
+                  icon:
+                      (context.watch<AppDataNotifier>().appData.showVitalsAlert)
+                          ? const Badge(
+                              label: Text('!'),
+                              padding: EdgeInsets.symmetric(horizontal: 6.0),
+                              child: Icon(Icons.time_to_leave_outlined),
+                            )
+                          : const Icon(Icons.time_to_leave_outlined),
+                  selectedIcon:
+                      (context.watch<AppDataNotifier>().appData.showVitalsAlert)
+                          ? const Badge(child: Icon(Icons.time_to_leave))
+                          : const Icon(Icons.time_to_leave),
+                  label: const Text('Vehicle'),
                 ),
                 const NavigationRailDestination(
                   icon: Icon(Icons.quick_contacts_dialer_outlined),

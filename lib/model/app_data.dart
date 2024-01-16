@@ -52,12 +52,48 @@ class AppData {
   /// Checks if last service log is not null and the vehicle service is due for
   /// less than or equal to 30 days from today or already passed and returns
   /// true, else returns false.
-  bool get serviceDueAlertStatus {
+  bool get showServiceDueAlert {
     if (lastServiceLog != null) {
       return lastServiceLog!.dueServiceDate.difference(DateTime.now()).inDays <=
           30;
     }
     return false;
+  }
+
+  /// Get vehicle's vitals due alert status.
+  ///
+  /// Checks if any of vehicle's vital dates (fitness, insurance and pollution
+  /// check) are due for alert and return true or false.
+  bool get showVitalsAlert {
+    return showFitnessDueAlert ||
+        showInsuranceDueAlert ||
+        showPollutionCheckDueAlert;
+  }
+
+  /// Get vehicle's fitness validity due alert status.
+  ///
+  /// Checks if the vehicle's fitness is due for less than or equal to 30 days
+  /// close to expiry or expired already then returns true, else returns false.
+  bool get showFitnessDueAlert {
+    return vehicleSpec.fitnessValidUpto.difference(DateTime.now()).inDays <= 30;
+  }
+
+  /// Get vehicle's insurance validity due alert status.
+  ///
+  /// Checks if the vehicle's insurance is due for less than or equal to 30 days
+  /// close to expiry or expired already then returns true, else returns false.
+  bool get showInsuranceDueAlert {
+    return vehicleSpec.insuranceValidUpto.difference(DateTime.now()).inDays <=
+        30;
+  }
+
+  /// Get vehicle's PUC validity due alert status.
+  ///
+  /// Checks if the vehicle's pollution check is due for less than or equal to
+  /// 30 days close to expiry or expired already then returns true,
+  /// else returns false.
+  bool get showPollutionCheckDueAlert {
+    return vehicleSpec.pucValidUpto.difference(DateTime.now()).inDays <= 30;
   }
 
   /// Factory constructor for creating a new [AppData] instance

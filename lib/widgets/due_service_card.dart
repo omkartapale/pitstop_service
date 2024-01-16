@@ -33,7 +33,7 @@ class _DueServiceCardState extends State<DueServiceCard> {
     // Initialize last service information
     _lastServiceLog = context.read<AppDataNotifier>().appData.lastServiceLog;
     _isServiceNearDue =
-        context.read<AppDataNotifier>().appData.serviceDueAlertStatus;
+        context.read<AppDataNotifier>().appData.showServiceDueAlert;
     // Initialize due service information
     // dueServiceDate = context
     //     .read<AppDataNotifier>()
