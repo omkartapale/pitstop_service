@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:pitstop_service/notifiers/app_data_notifier.dart';
 import 'package:pitstop_service/widgets/vehicle_key_spec_card.dart';
 import 'package:pitstop_service/widgets/vehicle_model_graphics.dart';
 import 'package:pitstop_service/widgets/vehicle_spec_item.dart';
 import 'package:pitstop_service/widgets/vehicle_vital_spec_card.dart';
+import 'package:provider/provider.dart';
 
 class VehicleInfo extends StatelessWidget {
   const VehicleInfo({super.key});
@@ -32,7 +34,12 @@ class VehicleInfo extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 4.0, vertical: 8.0),
-                  child: Text('Ameo',
+                  child: Text(
+                      context
+                          .watch<AppDataNotifier>()
+                          .appData
+                          .vehicleSpec
+                          .model,
                       style: Theme.of(context).textTheme.titleLarge),
                 ),
                 const Divider(
@@ -42,25 +49,37 @@ class VehicleInfo extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.only(
                       left: 8.0, top: 8.0, right: 8.0, bottom: 24.0),
-                  child: const Row(
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
                         child: VehicleSpecItem(
                           specHeading: 'Max Power',
-                          specValue: '74bhp @ 5400rpm',
+                          specValue: context
+                              .watch<AppDataNotifier>()
+                              .appData
+                              .vehicleSpec
+                              .maxPower,
                         ),
                       ),
                       Expanded(
                         child: VehicleSpecItem(
                           specHeading: 'Cubic Capacity',
-                          specValue: '1198cc',
+                          specValue: context
+                              .watch<AppDataNotifier>()
+                              .appData
+                              .vehicleSpec
+                              .capacity,
                         ),
                       ),
                       Expanded(
                         child: VehicleSpecItem(
                           specHeading: 'Cylinders',
-                          specValue: '3 Inline, SOHC',
+                          specValue: context
+                              .watch<AppDataNotifier>()
+                              .appData
+                              .vehicleSpec
+                              .cylinder,
                         ),
                       ),
                     ],

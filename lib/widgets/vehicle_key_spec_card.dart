@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pitstop_service/notifiers/app_data_notifier.dart';
 import 'package:pitstop_service/widgets/vehicle_spec_item.dart';
+import 'package:provider/provider.dart';
 
 /// Widget Class: Renders vehicle's key specification card
 class VehicleKeySpecCard extends StatelessWidget {
@@ -25,88 +27,142 @@ class VehicleKeySpecCard extends StatelessWidget {
             ),
             const SizedBox(height: 16.0),
             if (MediaQuery.of(context).size.width < 600)
-              const Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   VehicleSpecItem(
                     specHeading: 'Manufacturer',
-                    specValue: 'Volkswagen',
+                    specValue: context
+                        .watch<AppDataNotifier>()
+                        .appData
+                        .vehicleSpec
+                        .manufacturer,
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   VehicleSpecItem(
                     specHeading: 'Model',
-                    specValue: 'Ameo',
+                    specValue: context
+                        .watch<AppDataNotifier>()
+                        .appData
+                        .vehicleSpec
+                        .model,
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   VehicleSpecItem(
                     specHeading: 'Variant / Trim',
-                    specValue: '1.2L MPI Highline Plus',
+                    specValue: context
+                        .watch<AppDataNotifier>()
+                        .appData
+                        .vehicleSpec
+                        .variant,
                   ),
                 ],
               )
             else
-              const Row(
+              Row(
                 children: [
                   Expanded(
                     child: VehicleSpecItem(
                       specHeading: 'Manufacturer',
-                      specValue: 'Volkswagen',
+                      specValue: context
+                          .watch<AppDataNotifier>()
+                          .appData
+                          .vehicleSpec
+                          .manufacturer,
                     ),
                   ),
                   Expanded(
                     child: VehicleSpecItem(
                       specHeading: 'Model',
-                      specValue: 'Ameo',
+                      specValue: context
+                          .watch<AppDataNotifier>()
+                          .appData
+                          .vehicleSpec
+                          .model,
                     ),
                   ),
                   Expanded(
                     child: VehicleSpecItem(
                       specHeading: 'Variant / Trim',
-                      specValue: '1.2L MPI Highline Plus',
+                      specValue: context
+                          .watch<AppDataNotifier>()
+                          .appData
+                          .vehicleSpec
+                          .variant,
                     ),
                   ),
                 ],
               ),
             const SizedBox(height: 8.0),
             if (MediaQuery.of(context).size.width < 600)
-              const Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   VehicleSpecItem(
                     specHeading: 'Make Year',
-                    specValue: '2016',
+                    specValue: context
+                        .watch<AppDataNotifier>()
+                        .appData
+                        .vehicleSpec
+                        .makeYear
+                        .toString(),
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   VehicleSpecItem(
                     specHeading: 'Trasmission',
-                    specValue: 'Manual',
+                    specValue: context
+                        .watch<AppDataNotifier>()
+                        .appData
+                        .vehicleSpec
+                        .transmission
+                        .value,
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   VehicleSpecItem(
                     specHeading: 'Fuel',
-                    specValue: 'Petrol',
+                    specValue: context
+                        .watch<AppDataNotifier>()
+                        .appData
+                        .vehicleSpec
+                        .fuel
+                        .value,
                   ),
                 ],
               )
             else
-              const Row(
+              Row(
                 children: [
                   Expanded(
                     child: VehicleSpecItem(
                       specHeading: 'Make Year',
-                      specValue: '2016',
+                      specValue: context
+                          .watch<AppDataNotifier>()
+                          .appData
+                          .vehicleSpec
+                          .makeYear
+                          .toString(),
                     ),
                   ),
                   Expanded(
                     child: VehicleSpecItem(
                       specHeading: 'Trasmission',
-                      specValue: 'Manual',
+                      specValue: context
+                          .watch<AppDataNotifier>()
+                          .appData
+                          .vehicleSpec
+                          .transmission
+                          .value,
                     ),
                   ),
                   Expanded(
                     child: VehicleSpecItem(
                       specHeading: 'Fuel',
-                      specValue: 'Petrol',
+                      specValue: context
+                          .watch<AppDataNotifier>()
+                          .appData
+                          .vehicleSpec
+                          .fuel
+                          .value,
                     ),
                   ),
                 ],

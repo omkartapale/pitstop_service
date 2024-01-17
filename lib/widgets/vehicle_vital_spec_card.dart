@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:pitstop_service/notifiers/app_data_notifier.dart';
 import 'package:pitstop_service/widgets/vehicle_vital_spec_item.dart';
+import 'package:provider/provider.dart';
 
 /// Widget Class: Renders vehicle's vital information card
-class VehicleVitalSpecCard extends StatefulWidget {
+class VehicleVitalSpecCard extends StatelessWidget {
   /// Vehicle's Key Specification card widget
   ///
   /// Renders Card UI to provides vehicle's vitals like vehicle's fitness valid
@@ -12,22 +14,6 @@ class VehicleVitalSpecCard extends StatefulWidget {
   /// The status of these details is marked to alert if dates are less than or
   /// equal to 30 days close from today or already passed.
   const VehicleVitalSpecCard({super.key});
-
-  @override
-  State<VehicleVitalSpecCard> createState() => _VehicleVitalSpecCardState();
-}
-
-class _VehicleVitalSpecCardState extends State<VehicleVitalSpecCard> {
-  late DateTime fitnessExpiry, insuranceExpiry, pucExpiry;
-
-  @override
-  void initState() {
-    // initiate vital dates for vehicle
-    fitnessExpiry = DateTime.fromMillisecondsSinceEpoch(1949941800000);
-    insuranceExpiry = DateTime.fromMillisecondsSinceEpoch(1729103400000);
-    pucExpiry = DateTime.fromMillisecondsSinceEpoch(1702751400000);
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,22 +36,43 @@ class _VehicleVitalSpecCardState extends State<VehicleVitalSpecCard> {
                 children: [
                   VehicleVitalSpecItem(
                     specHeading: 'Vehicle Fitness',
-                    specDate: fitnessExpiry,
-                    isAlert: _isFitnessNearExpiry,
+                    specDate: context
+                        .watch<AppDataNotifier>()
+                        .appData
+                        .vehicleSpec
+                        .fitnessValidUpto,
+                    isAlert: context
+                        .watch<AppDataNotifier>()
+                        .appData
+                        .showFitnessDueAlert,
                     onUpdate: () => _updateRC(context),
                   ),
                   const SizedBox(height: 8.0),
                   VehicleVitalSpecItem(
                     specHeading: 'Insurance',
-                    specDate: insuranceExpiry,
-                    isAlert: _isInsuranceNearExpiry,
+                    specDate: context
+                        .watch<AppDataNotifier>()
+                        .appData
+                        .vehicleSpec
+                        .insuranceValidUpto,
+                    isAlert: context
+                        .watch<AppDataNotifier>()
+                        .appData
+                        .showInsuranceDueAlert,
                     onUpdate: () => _updateInsurance(context),
                   ),
                   const SizedBox(height: 8.0),
                   VehicleVitalSpecItem(
                     specHeading: 'Pollution Check',
-                    specDate: pucExpiry,
-                    isAlert: _isPucNearExpiry,
+                    specDate: context
+                        .watch<AppDataNotifier>()
+                        .appData
+                        .vehicleSpec
+                        .pucValidUpto,
+                    isAlert: context
+                        .watch<AppDataNotifier>()
+                        .appData
+                        .showPollutionCheckDueAlert,
                     onUpdate: () => _updatePUC(context),
                   ),
                 ],
@@ -76,8 +83,15 @@ class _VehicleVitalSpecCardState extends State<VehicleVitalSpecCard> {
                   Expanded(
                     child: VehicleVitalSpecItem(
                       specHeading: 'Vehicle Fitness',
-                      specDate: fitnessExpiry,
-                      isAlert: _isFitnessNearExpiry,
+                      specDate: context
+                          .watch<AppDataNotifier>()
+                          .appData
+                          .vehicleSpec
+                          .fitnessValidUpto,
+                      isAlert: context
+                          .watch<AppDataNotifier>()
+                          .appData
+                          .showFitnessDueAlert,
                       onUpdate: () => _updateRC(context),
                     ),
                   ),
@@ -85,8 +99,15 @@ class _VehicleVitalSpecCardState extends State<VehicleVitalSpecCard> {
                   Expanded(
                     child: VehicleVitalSpecItem(
                       specHeading: 'Insurance',
-                      specDate: insuranceExpiry,
-                      isAlert: _isInsuranceNearExpiry,
+                      specDate: context
+                          .watch<AppDataNotifier>()
+                          .appData
+                          .vehicleSpec
+                          .insuranceValidUpto,
+                      isAlert: context
+                          .watch<AppDataNotifier>()
+                          .appData
+                          .showInsuranceDueAlert,
                       onUpdate: () => _updateInsurance(context),
                     ),
                   ),
@@ -94,8 +115,15 @@ class _VehicleVitalSpecCardState extends State<VehicleVitalSpecCard> {
                   Expanded(
                     child: VehicleVitalSpecItem(
                       specHeading: 'Pollution Check',
-                      specDate: pucExpiry,
-                      isAlert: _isPucNearExpiry,
+                      specDate: context
+                          .watch<AppDataNotifier>()
+                          .appData
+                          .vehicleSpec
+                          .pucValidUpto,
+                      isAlert: context
+                          .watch<AppDataNotifier>()
+                          .appData
+                          .showPollutionCheckDueAlert,
                       onUpdate: () => _updatePUC(context),
                     ),
                   ),
@@ -112,7 +140,7 @@ class _VehicleVitalSpecCardState extends State<VehicleVitalSpecCard> {
   /// Shows a Date Picker
   ///
   /// Once a new date is selected / provided, vehicle fitness date is updated
-  /// and check for [_isFitnessNearExpiry] to set status for new date.
+  /// and check for Fitness validity status to set alert for new date.
   Future<void> _updateRC(BuildContext context) {
     return showDatePicker(
       context: context,
@@ -120,15 +148,17 @@ class _VehicleVitalSpecCardState extends State<VehicleVitalSpecCard> {
       // firstDate: DateTime(2016, 10, 17), // registration date or todays date can be good too
       firstDate: DateTime(2023), // 1st Jan 2023
       lastDate: DateTime(2100, 12, 31), // 31st Dec 2100
-      initialDate: fitnessExpiry, // current expiry date
+      initialDate: context
+          .read<AppDataNotifier>()
+          .appData
+          .vehicleSpec
+          .fitnessValidUpto, // current expiry date
       helpText: 'Vehicle Fitness',
       confirmText: 'Update Fitness',
       fieldLabelText: 'Valid upto',
     ).then((pickedDate) {
       if (pickedDate != null) {
-        setState(() {
-          fitnessExpiry = pickedDate;
-        });
+        context.read<AppDataNotifier>().updateFitnessDate(pickedDate);
       }
     });
   }
@@ -138,7 +168,7 @@ class _VehicleVitalSpecCardState extends State<VehicleVitalSpecCard> {
   /// Shows a Date Picker
   ///
   /// Once a new date is selected / provided, vehicle insurance expiry date
-  /// is updated and check for [_isInsuranceNearExpiry] to set status for
+  /// is updated and check for Insurance validity status to set alert for
   /// new date.
   Future<void> _updateInsurance(BuildContext context) {
     return showDatePicker(
@@ -147,15 +177,17 @@ class _VehicleVitalSpecCardState extends State<VehicleVitalSpecCard> {
       // firstDate: insuranceExpiry, // current expiry date
       firstDate: DateTime(2023), // 1st Jan 2023
       lastDate: DateTime(2100, 12, 31), // 31st Dec 2100
-      initialDate: insuranceExpiry, // current expiry date
+      initialDate: context
+          .read<AppDataNotifier>()
+          .appData
+          .vehicleSpec
+          .insuranceValidUpto, // current expiry date
       helpText: 'Insurance',
       confirmText: 'Update Insurance',
       fieldLabelText: 'Valid upto',
     ).then((pickedDate) {
       if (pickedDate != null) {
-        setState(() {
-          insuranceExpiry = pickedDate;
-        });
+        context.read<AppDataNotifier>().updateInsuranceDate(pickedDate);
       }
     });
   }
@@ -165,41 +197,26 @@ class _VehicleVitalSpecCardState extends State<VehicleVitalSpecCard> {
   /// Shows a Date Picker
   ///
   /// Once a new date is selected / provided, vehicle PUC expiry date is
-  /// updated and check for [_isPucNearExpiry] to set status for new date.
+  /// updated and check for Pollution Check validity status to set alert for
+  /// new date.
   Future<void> _updatePUC(BuildContext context) {
     return showDatePicker(
       context: context,
       currentDate: DateTime.now(),
       firstDate: DateTime(2023), // 1st Jan 2023
       lastDate: DateTime(2100, 12, 31), // 31st Dec 2100
-      initialDate: pucExpiry, // current expiry date
+      initialDate: context
+          .read<AppDataNotifier>()
+          .appData
+          .vehicleSpec
+          .pucValidUpto, // current expiry date
       helpText: 'Pollution Check',
       confirmText: 'Update PUC',
       fieldLabelText: 'Valid upto',
     ).then((pickedDate) {
       if (pickedDate != null) {
-        setState(() {
-          pucExpiry = pickedDate;
-        });
+        context.read<AppDataNotifier>().updatePucDate(pickedDate);
       }
     });
-  }
-
-  /// Checks if the vehicle fitness is less than or equal to 30 days
-  /// close to expiry or expired already.
-  bool get _isFitnessNearExpiry {
-    return fitnessExpiry.difference(DateTime.now()).inDays <= 30;
-  }
-
-  /// Checks if the vehicle insurance is less than or equal to 30 days
-  /// close to expiry or expired already.
-  bool get _isInsuranceNearExpiry {
-    return insuranceExpiry.difference(DateTime.now()).inDays <= 30;
-  }
-
-  /// Checks if the vehicle pollution check is less than or equal to 30 days
-  /// close to expiry or expired already.
-  bool get _isPucNearExpiry {
-    return pucExpiry.difference(DateTime.now()).inDays <= 30;
   }
 }

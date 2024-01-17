@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:pitstop_service/notifiers/app_data_notifier.dart';
 import 'package:pitstop_service/pages/about.dart';
 import 'package:pitstop_service/pages/contact.dart';
 import 'package:pitstop_service/pages/history.dart';
 import 'package:pitstop_service/pages/last_service.dart';
 import 'package:pitstop_service/pages/vehicle_info.dart';
+import 'package:provider/provider.dart';
 
 class ServiceApp extends StatefulWidget {
   const ServiceApp({super.key});
@@ -80,28 +82,52 @@ class _ServiceAppState extends State<ServiceApp> {
                 });
               },
               labelType: NavigationRailLabelType.selected,
-              destinations: const <NavigationRailDestination>[
+              destinations: <NavigationRailDestination>[
                 NavigationRailDestination(
-                  icon: Badge(child: Icon(Icons.bookmark_border)),
-                  selectedIcon: Badge(child: Icon(Icons.book)),
-                  label: Text('Service'),
+                  icon: (context
+                          .watch<AppDataNotifier>()
+                          .appData
+                          .showServiceDueAlert)
+                      ? const Badge(
+                          label: Text('!'),
+                          padding: EdgeInsets.symmetric(horizontal: 6.0),
+                          child: Icon(Icons.bookmark_border),
+                        )
+                      : const Icon(Icons.bookmark_border),
+                  selectedIcon: (context
+                          .watch<AppDataNotifier>()
+                          .appData
+                          .showServiceDueAlert)
+                      ? const Badge(child: Icon(Icons.book))
+                      : const Icon(Icons.book),
+                  label: const Text('Service'),
                 ),
                 NavigationRailDestination(
-                  icon: Badge(child: Icon(Icons.time_to_leave_outlined)),
-                  selectedIcon: Badge(child: Icon(Icons.time_to_leave)),
-                  label: Text('Vehicle'),
+                  icon:
+                      (context.watch<AppDataNotifier>().appData.showVitalsAlert)
+                          ? const Badge(
+                              label: Text('!'),
+                              padding: EdgeInsets.symmetric(horizontal: 6.0),
+                              child: Icon(Icons.time_to_leave_outlined),
+                            )
+                          : const Icon(Icons.time_to_leave_outlined),
+                  selectedIcon:
+                      (context.watch<AppDataNotifier>().appData.showVitalsAlert)
+                          ? const Badge(child: Icon(Icons.time_to_leave))
+                          : const Icon(Icons.time_to_leave),
+                  label: const Text('Vehicle'),
                 ),
-                NavigationRailDestination(
+                const NavigationRailDestination(
                   icon: Icon(Icons.quick_contacts_dialer_outlined),
                   selectedIcon: Icon(Icons.contact_phone),
                   label: Text('Contact'),
                 ),
-                NavigationRailDestination(
+                const NavigationRailDestination(
                   icon: Icon(Icons.history),
                   selectedIcon: Icon(Icons.manage_history),
                   label: Text('History'),
                 ),
-                NavigationRailDestination(
+                const NavigationRailDestination(
                   icon: Icon(Icons.help_outline),
                   selectedIcon: Icon(Icons.help),
                   label: Text('About'),

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:pitstop_service/model/vehicle_specification.dart';
+import 'package:pitstop_service/notifiers/app_data_notifier.dart';
 import 'package:pitstop_service/super/emergency_contacts_form.dart';
 import 'package:pitstop_service/super/service_logs.dart';
+import 'package:provider/provider.dart';
 
 class SuperVehicleSpecificationForm extends StatefulWidget {
   const SuperVehicleSpecificationForm({super.key});
@@ -44,7 +46,9 @@ class _SuperVehicleSpecificationFormState
   @override
   initState() {
     // Initialize vehicles spec object
-    vSpec = demoVehicleSpec;
+    vSpec = context.read<AppDataNotifier>().appData.vehicleSpec;
+    // vSpec = jsonDemoVehicleSpec;
+    // vSpec = demoVehicleSpec;
 
     // Populate controllers and state vars with vehicle specifications
     _manufacturerController.text = vSpec.manufacturer;
@@ -92,24 +96,6 @@ class _SuperVehicleSpecificationFormState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            // TODO(omkartapale): Moving back to super dashboard making trouble.
-            Navigator.popUntil(
-              context,
-              ModalRoute.withName('/'),
-            );
-
-            // Navigator.pushAndRemoveUntil(
-            //   context,
-            //   MaterialPageRoute<void>(
-            //     builder: (BuildContext context) => const SuperApp(),
-            //   ),
-            //   ModalRoute.withName('/'),
-            // );
-          },
-          icon: const Icon(Icons.terminal),
-        ),
         title: const Text('\$sudo'),
         actions: [
           IconButton.filledTonal(
@@ -118,25 +104,23 @@ class _SuperVehicleSpecificationFormState
           ),
           IconButton(
             onPressed: () {
-              Navigator.pushAndRemoveUntil(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute<void>(
                   builder: (BuildContext context) => const SuperServiceLogs(),
                 ),
-                ModalRoute.withName('/'),
               );
             },
             icon: const Icon(Icons.warehouse),
           ),
           IconButton(
             onPressed: () {
-              Navigator.pushAndRemoveUntil(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute<void>(
                   builder: (BuildContext context) =>
                       const SuperEmergencyContactsForm(),
                 ),
-                ModalRoute.withName('/'),
               );
             },
             icon: const Icon(Icons.emergency),
@@ -489,27 +473,14 @@ class _SuperVehicleSpecificationFormState
                       spacing: 8.0,
                       children: [
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            _saveForm(context);
+                            Navigator.pop(context);
+                          },
                           child: const Text('Save & Exit'),
                         ),
                         FilledButton(
-                          onPressed: () {
-                            // Validate will return true if the form is valid, or false if
-                            // the form is invalid.
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState!.save();
-
-                              // Process data.
-
-                              setState(() {});
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(
-                                      content: Text(
-                                'Vehicle specification updated.',
-                                textAlign: TextAlign.center,
-                              )));
-                            }
-                          },
+                          onPressed: () => _saveForm(context),
                           child: const Text('Save'),
                         ),
                       ],
@@ -523,6 +494,47 @@ class _SuperVehicleSpecificationFormState
         ),
       ),
     );
+  }
+
+  void _saveForm(BuildContext context) {
+    // Validate will return true if the form is valid, or false if
+    // the form is invalid.
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      // Remove form field focus and hide keyboard.
+      FocusManager.instance.primaryFocus?.unfocus();
+      // FocusScope.of(context).nearestScope.unfocus();
+      // FocusScope.of(context).enclosingScope?.unfocus();
+
+      // Process data.
+      setState(() {
+        // Prepare vehicle specification object with new data for processing
+        vSpec = VehicleSpecification(
+            manufacturer: _manufacturerController.text.trim(),
+            model: _modelController.text.trim(),
+            variant: _variantController.text.trim(),
+            makeYear: int.parse(_makeYearController.text.trim()),
+            transmission: _transmission,
+            fuel: _fuelType,
+            licensePlate: _licensePlateController.text.trim(),
+            maxPower: _maxPowerController.text.trim(),
+            capacity: _capacityController.text.trim(),
+            cylinder: _cylinderController.text.trim(),
+            fitnessValidUpto: _fitnessValidUpto,
+            insuranceValidUpto: _insuranceValidUpto,
+            pucValidUpto: _pucValidUpto);
+      });
+
+      // Update and persist the Vehicle Specifications
+      context.read<AppDataNotifier>().saveVehicleSpecifications(vSpec);
+
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+        'Vehicle specification updated.',
+        textAlign: TextAlign.center,
+      )));
+    }
   }
 
   /// Vehicle RC Fitness Validity Date picker dialog

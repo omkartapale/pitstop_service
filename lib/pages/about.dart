@@ -12,14 +12,13 @@ class _AboutState extends State<About> {
   int _counter = 0;
 
   void _incrementCounter() {
-    if (_counter >= 1) {
+    setState(() {
+      _counter++;
+    });
+    if (_counter >= 7) {
       _confirmSuper(context);
       setState(() {
         _counter = 0;
-      });
-    } else {
-      setState(() {
-        _counter++;
       });
     }
   }

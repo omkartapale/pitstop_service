@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pitstop_service/model/emergency_contact.dart';
+import 'package:pitstop_service/notifiers/app_data_notifier.dart';
 import 'package:pitstop_service/super/service_logs.dart';
 import 'package:pitstop_service/super/vehicle_spec_form.dart';
+import 'package:provider/provider.dart';
 
 class SuperEmergencyContactsForm extends StatefulWidget {
   const SuperEmergencyContactsForm({super.key});
@@ -34,14 +36,12 @@ class _SuperEmergencyContactsFormState
   @override
   void initState() {
     // Initialize primary and secondary contacts
-    primary = const EmergencyContact(
-        name: 'Primary Person',
-        relation: ContactRelation.relative,
-        number: '9876543210');
-    secondary = const EmergencyContact(
-        name: 'Secondary Person',
-        relation: ContactRelation.friend,
-        number: '9876543211');
+    // primary = demoPrimary;
+    // secondary = demoSecondary;
+    primary = context.read<AppDataNotifier>().appData.primaryContact;
+    // primary = jsonDemoPrimaryContact;
+    secondary = context.read<AppDataNotifier>().appData.secondaryContact;
+    // secondary = jsonDemoSecondaryContact;
 
     // Init controllers for primary contact
     _primaryNameController.text = primary.name;
@@ -71,38 +71,27 @@ class _SuperEmergencyContactsFormState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.popUntil(
-              context,
-              ModalRoute.withName('/'),
-            );
-          },
-          icon: const Icon(Icons.terminal),
-        ),
         title: const Text('\$sudo'),
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.pushAndRemoveUntil(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute<void>(
                   builder: (BuildContext context) =>
                       const SuperVehicleSpecificationForm(),
                 ),
-                ModalRoute.withName('/'),
               );
             },
             icon: const Icon(Icons.type_specimen),
           ),
           IconButton(
             onPressed: () {
-              Navigator.pushAndRemoveUntil(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute<void>(
                   builder: (BuildContext context) => const SuperServiceLogs(),
                 ),
-                ModalRoute.withName('/'),
               );
             },
             icon: const Icon(Icons.warehouse),
@@ -185,7 +174,7 @@ class _SuperEmergencyContactsFormState
                                   child: DropdownButton<ContactRelation>(
                                     value: _primaryContactRelation,
                                     isDense: true,
-                                    onChanged: <SpareType>(newValue) {
+                                    onChanged: <ContactRelation>(newValue) {
                                       setState(() {
                                         _primaryContactRelation = newValue;
                                         state.didChange(newValue);
@@ -196,11 +185,7 @@ class _SuperEmergencyContactsFormState
                                         return DropdownMenuItem<
                                             ContactRelation>(
                                           value: options,
-                                          child: Text(
-                                            options.value,
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.normal),
-                                          ),
+                                          child: Text(options.value),
                                         );
                                       },
                                     ).toList(),
@@ -277,7 +262,7 @@ class _SuperEmergencyContactsFormState
                                   child: DropdownButton<ContactRelation>(
                                     value: _secondaryContactRelation,
                                     isDense: true,
-                                    onChanged: <SpareType>(newValue) {
+                                    onChanged: <ContactRelation>(newValue) {
                                       setState(() {
                                         _secondaryContactRelation = newValue;
                                         state.didChange(newValue);
@@ -288,11 +273,7 @@ class _SuperEmergencyContactsFormState
                                         return DropdownMenuItem<
                                             ContactRelation>(
                                           value: options,
-                                          child: Text(
-                                            options.value,
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.normal),
-                                          ),
+                                          child: Text(options.value),
                                         );
                                       },
                                     ).toList(),
@@ -332,27 +313,14 @@ class _SuperEmergencyContactsFormState
                       spacing: 8.0,
                       children: [
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            _saveForm(context);
+                            Navigator.pop(context);
+                          },
                           child: const Text('Save & Exit'),
                         ),
                         FilledButton(
-                          onPressed: () {
-                            // Validate will return true if the form is valid, or false if
-                            // the form is invalid.
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState!.save();
-
-                              // Process data.
-
-                              setState(() {});
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(
-                                      content: Text(
-                                'Emergency contacts updated.',
-                                textAlign: TextAlign.center,
-                              )));
-                            }
-                          },
+                          onPressed: () => _saveForm(context),
                           child: const Text('Save'),
                         ),
                       ],
@@ -366,5 +334,46 @@ class _SuperEmergencyContactsFormState
         ),
       ),
     );
+  }
+
+  void _saveForm(BuildContext context) {
+    // Validate will return true if the form is valid, or false if
+    // the form is invalid.
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      // Remove form field focus and hide keyboard.
+      FocusManager.instance.primaryFocus?.unfocus();
+      // FocusScope.of(context).nearestScope.unfocus();
+      // FocusScope.of(context).enclosingScope?.unfocus();
+
+      // Process data.
+      setState(() {
+        // Prepare primary contact object with new data for processing
+        primary = EmergencyContact(
+          name: _primaryNameController.text.trim(),
+          relation: _primaryContactRelation,
+          number: _primaryNumberController.text.trim(),
+        );
+        // Prepare secondary contact object with new data for processing
+        secondary = EmergencyContact(
+          name: _secondaryNameController.text.trim(),
+          relation: _secondaryContactRelation,
+          number: _secondaryNumberController.text.trim(),
+        );
+      });
+
+      // Update and persist the emergency contacts
+      context.read<AppDataNotifier>().saveEmergencyContact(
+            primary: primary,
+            secondary: secondary,
+          );
+
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+        'Emergency contacts updated.',
+        textAlign: TextAlign.center,
+      )));
+    }
   }
 }

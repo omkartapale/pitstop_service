@@ -24,11 +24,7 @@ class LastService extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16.0),
-            const VehicleRegistrationInfoBox(
-              manufacturer: 'Volkswagen',
-              model: 'Ameo',
-              registrationNumber: 'MH11 BV 8183',
-            ),
+            const VehicleRegistrationInfoBox(),
             if (MediaQuery.of(context).size.width < 600)
               const Column(
                 children: [

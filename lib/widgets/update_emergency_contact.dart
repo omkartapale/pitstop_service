@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:pitstop_service/model/emergency_contact.dart';
+import 'package:pitstop_service/notifiers/app_data_notifier.dart';
+import 'package:provider/provider.dart';
 
 class EmergencyContactForm extends StatefulWidget {
-  const EmergencyContactForm({super.key, required this.contact});
+  const EmergencyContactForm({
+    super.key,
+    required this.contact,
+    required this.isPrimaryContact,
+  });
 
   final EmergencyContact contact;
+  final bool isPrimaryContact;
 
   @override
   State<EmergencyContactForm> createState() => _EmergencyContactFormState();
@@ -13,15 +20,15 @@ class EmergencyContactForm extends StatefulWidget {
 class _EmergencyContactFormState extends State<EmergencyContactForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  TextEditingController nameController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   late ContactRelation _contactRelation;
-  TextEditingController numberController = TextEditingController();
+  final TextEditingController _numberController = TextEditingController();
 
   @override
   void initState() {
-    nameController.text = widget.contact.name;
+    _nameController.text = widget.contact.name;
     _contactRelation = widget.contact.relation;
-    numberController.text = widget.contact.number;
+    _numberController.text = widget.contact.number;
 
     super.initState();
   }
@@ -29,8 +36,8 @@ class _EmergencyContactFormState extends State<EmergencyContactForm> {
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    nameController.dispose();
-    numberController.dispose();
+    _nameController.dispose();
+    _numberController.dispose();
     super.dispose();
   }
 
@@ -42,8 +49,9 @@ class _EmergencyContactFormState extends State<EmergencyContactForm> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           TextFormField(
-            controller: nameController,
+            controller: _nameController,
             keyboardType: TextInputType.name,
+            textCapitalization: TextCapitalization.words,
             decoration: const InputDecoration(
               isDense: true,
               filled: true,
@@ -96,7 +104,7 @@ class _EmergencyContactFormState extends State<EmergencyContactForm> {
           ),
           const SizedBox(height: 16),
           TextFormField(
-            controller: numberController,
+            controller: _numberController,
             keyboardType: TextInputType.phone,
             decoration: const InputDecoration(
               isDense: true,
@@ -121,12 +129,24 @@ class _EmergencyContactFormState extends State<EmergencyContactForm> {
                 _formKey.currentState!.save();
 
                 // Process data.
-                // EmergencyContact temp = EmergencyContact(
-                //   name: nameController.text.trim(),
-                //   relation: _contactRelation,
-                //   number: numberController.text.trim(),
-                // );
-                setState(() {});
+                // Prepare contact object with new data for processing
+                EmergencyContact contact = EmergencyContact(
+                  name: _nameController.text.trim(),
+                  relation: _contactRelation,
+                  number: _numberController.text.trim(),
+                );
+
+                // Update and persist the emergency contacts
+                //
+                // Check if to update primary contact or secondary contact,
+                // accordingly pass new contact information to parameter
+                widget.isPrimaryContact
+                    ? context
+                        .read<AppDataNotifier>()
+                        .saveEmergencyContact(primary: contact)
+                    : context
+                        .read<AppDataNotifier>()
+                        .saveEmergencyContact(secondary: contact);
 
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

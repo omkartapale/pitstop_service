@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 /// **Vehicle Service Log Model class**
 ///
 /// DateTime [lastServiceDate],
@@ -36,6 +38,20 @@ class ServiceLog {
   /// Suggestions from technician about work to perform in next service.
   final String suggestions;
 
+  /// Get the list of worknotes.
+  ///
+  /// Splits the string at commas and returns a list of substrings with
+  /// additional checking if substring is not empty.
+  List<String> get worknotesList =>
+      worknotes.split(',').where((e) => e.trim().isNotEmpty).toList();
+
+  /// Get the list of suggestions.
+  ///
+  /// Splits the string at commas and returns a list of substrings with
+  /// additional checking if substring is not empty.
+  List<String> get suggestionsList =>
+      suggestions.split(',').where((e) => e.trim().isNotEmpty).toList();
+
   /// Factory constructor for creating a new [ServiceLog] instance from a map.
   factory ServiceLog.fromJson(Map<String, dynamic> json) {
     return ServiceLog(
@@ -63,11 +79,21 @@ class ServiceLog {
   }
 }
 
+/// Converts a JSON string into a Service Log List.
+///
+/// Deserialize JSON string [jsonString], parse and return list of [ServiceLog].
+/// Useful to parse JSON array of [ServiceLog] objects from stored json.
+List<ServiceLog> parseServiceLogs(String jsonString) {
+  final parsed = (jsonDecode(jsonString) as List).cast<Map<String, dynamic>>();
+
+  return parsed.map<ServiceLog>((json) => ServiceLog.fromJson(json)).toList();
+}
+
 /// Demo instance 1 of [ServiceLog] class.
 final ServiceLog demoServiceLog1 = ServiceLog(
   lastServiceDate: DateTime.fromMillisecondsSinceEpoch(1597190400000),
   lastOdometer: 1000,
-  worknotes: 'Brake Oil, Brake Pas, Engine Tuneup',
+  worknotes: 'Brake Oil, Brake Pads, Engine Tuneup',
   dueServiceDate: DateTime.fromMillisecondsSinceEpoch(1628467200000),
   dueOdometer: 2000,
   suggestions: 'Brake Oil, Calliper Pin',
@@ -77,7 +103,7 @@ final ServiceLog demoServiceLog1 = ServiceLog(
 final ServiceLog demoServiceLog2 = ServiceLog(
   lastServiceDate: DateTime.fromMillisecondsSinceEpoch(1631145600000),
   lastOdometer: 2000,
-  worknotes: 'Brake Oil, Brake Pas, Engine Tuneup',
+  worknotes: 'Brake Oil, Brake Pads, Engine Tuneup',
   dueServiceDate: DateTime.fromMillisecondsSinceEpoch(1659052800000),
   dueOdometer: 3000,
   suggestions: 'Brake Oil, Calliper Pin',
@@ -87,7 +113,7 @@ final ServiceLog demoServiceLog2 = ServiceLog(
 final ServiceLog demoServiceLog3 = ServiceLog(
   lastServiceDate: DateTime.fromMillisecondsSinceEpoch(1664582400000),
   lastOdometer: 3000,
-  worknotes: 'Brake Oil, Brake Pas, Engine Tuneup',
+  worknotes: 'Brake Oil, Brake Pads, Engine Tuneup',
   dueServiceDate: DateTime.fromMillisecondsSinceEpoch(1685491200000),
   dueOdometer: 4000,
   suggestions: 'Brake Oil, Calliper Pin',
@@ -97,7 +123,7 @@ final ServiceLog demoServiceLog3 = ServiceLog(
 final ServiceLog demoServiceLog4 = ServiceLog(
   lastServiceDate: DateTime.fromMillisecondsSinceEpoch(1686528000000),
   lastOdometer: 4000,
-  worknotes: 'Brake Oil, Brake Pas, Engine Tuneup',
+  worknotes: 'Brake Oil, Brake Pads, Engine Tuneup',
   dueServiceDate: DateTime.fromMillisecondsSinceEpoch(1699747200000),
   dueOdometer: 5000,
   suggestions: 'Brake Oil, Calliper Pin',
@@ -107,7 +133,7 @@ final ServiceLog demoServiceLog4 = ServiceLog(
 final ServiceLog demoServiceLog5 = ServiceLog(
   lastServiceDate: DateTime.fromMillisecondsSinceEpoch(1699747200000),
   lastOdometer: 5000,
-  worknotes: 'Brake Oil, Brake Pas, Engine Tuneup',
+  worknotes: 'Brake Oil, Brake Pads, Engine Tuneup',
   dueServiceDate: DateTime.fromMillisecondsSinceEpoch(1710201600000),
   dueOdometer: 6000,
   suggestions: 'Brake Oil, Calliper Pin',
@@ -121,3 +147,53 @@ final List<ServiceLog> demoListServiceLogs = [
   demoServiceLog4,
   demoServiceLog5
 ];
+
+/// Demo JSON string representing 5 dummy Service Logs.
+const demoListServiceLogsJsonString = '''
+[
+  {
+    "lastServiceDate": 1597190400000,
+    "lastOdometer": 1000,
+    "worknotes": "Brake Oil, Brake Pads, Engine Tuneup",
+    "dueServiceDate": 1628467200000,
+    "dueOdometer": 2000,
+    "suggestions": "Brake Oil, Calliper Pin"
+  },
+  {
+    "lastServiceDate": 1631145600000,
+    "lastOdometer": 2000,
+    "worknotes": "Brake Oil, Brake Pads, Engine Tuneup",
+    "dueServiceDate": 1659052800000,
+    "dueOdometer": 3000,
+    "suggestions": "Brake Oil, Calliper Pin"
+  },
+  {
+    "lastServiceDate": 1664582400000,
+    "lastOdometer": 3000,
+    "worknotes": "Brake Oil, Brake Pads, Engine Tuneup",
+    "dueServiceDate": 1685491200000,
+    "dueOdometer": 4000,
+    "suggestions": "Brake Oil, Calliper Pin"
+  },
+  {
+    "lastServiceDate": 1686528000000,
+    "lastOdometer": 4000,
+    "worknotes": "Brake Oil, Brake Pads, Engine Tuneup",
+    "dueServiceDate": 1699747200000,
+    "dueOdometer": 5000,
+    "suggestions": "Brake Oil, Calliper Pin"
+  },
+  {
+    "lastServiceDate": 1699747200000,
+    "lastOdometer": 5000,
+    "worknotes": "Brake Oil, Brake Pads, Engine Tuneup",
+    "dueServiceDate": 1710201600000,
+    "dueOdometer": 6000,
+    "suggestions": "Brake Oil, Calliper Pin"
+  }
+]
+''';
+
+/// Demo list of dummy instances of Service Logs from JSON string
+final List<ServiceLog> jsonDemoListServiceLogs =
+    parseServiceLogs(demoListServiceLogsJsonString);
