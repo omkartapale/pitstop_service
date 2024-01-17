@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:pitstop_service/model/app_data.dart';
 import 'package:pitstop_service/model/emergency_contact.dart';
+import 'package:pitstop_service/model/service_log.dart';
 import 'package:pitstop_service/model/vehicle_specification.dart';
 import 'package:pitstop_service/services/app_data_service.dart';
 
@@ -208,16 +209,92 @@ class AppDataNotifier with ChangeNotifier {
     await save(newAppData);
   }
 
+  /// Add and persist new service log to the Service History.
+  ///
+  /// Inserts [serviceLog] at the beginning of the service history list in
+  /// existing [AppData] instance.
+  /// Creates a temporary instance of [AppData] with updated [serviceHistory]
+  /// list and [save] this instance to local file storage.
+  Future<void> addServiceLog(ServiceLog serviceLog) async {
+    // Add new service log
+    _appData.addServiceLog(serviceLog);
+
+    // Prepare new AppData instance with updated information
+    AppData newAppData = AppData(
+      vehicleSpec: _appData.vehicleSpec,
+      serviceHistory: _appData.serviceHistory,
+      primaryContact: _appData.primaryContact,
+      secondaryContact: _appData.secondaryContact,
+      version: _appData.version,
+    );
+
+    // Persist the changes to a local file storage.
+    await save(newAppData);
+  }
+
+  /// Update and persist existing service log in the Service History.
+  ///
+  /// Removes the existing [serviceLog] at [index], and inserts new [serviceLog]
+  /// at the same position in the service history list of existing [AppData]
+  /// instance.
+  /// Creates a temporary instance of [AppData] with updated [serviceHistory]
+  /// list and [save] this instance to local file storage.
+  Future<void> updateServiceLog(int index, ServiceLog serviceLog) async {
+    // Update the service log
+    _appData.updateServiceLog(index, serviceLog);
+
+    // Prepare new AppData instance with updated information
+    AppData newAppData = AppData(
+      vehicleSpec: _appData.vehicleSpec,
+      serviceHistory: _appData.serviceHistory,
+      primaryContact: _appData.primaryContact,
+      secondaryContact: _appData.secondaryContact,
+      version: _appData.version,
+    );
+
+    // Persist the changes to a local file storage.
+    await save(newAppData);
+  }
+
+  /// Delete and persist existing service log in the Service History.
+  ///
+  /// Removes the existing [serviceLog] at [index] in the service history list
+  /// of existing [AppData] instance.
+  /// Creates a temporary instance of [AppData] with updated [serviceHistory]
+  /// list and [save] this instance to local file storage.
+  Future<void> deleteServiceLog(int index) async {
+    // Delete requested service log
+    _appData.deleteServiceLog(index);
+
+    // Prepare new AppData instance with updated information
+    AppData newAppData = AppData(
+      vehicleSpec: _appData.vehicleSpec,
+      serviceHistory: _appData.serviceHistory,
+      primaryContact: _appData.primaryContact,
+      secondaryContact: _appData.secondaryContact,
+      version: _appData.version,
+    );
+
+    // Persist the changes to a local file storage.
+    await save(newAppData);
+  }
+
   /// Save the [AppData] with [newAppData] in a local file storage.
   ///
   /// Validate old object and new object are not identical, then store new
   /// [AppData] in memory, [notifyListeners] a change has occured and save in
   /// local file storage with the help of [AppDataService].
   Future<void> save(AppData? newAppData) async {
-    if (newAppData == null) return;
+    if (newAppData == null) {
+      debugPrint('Returning as new AppData is null');
+      return;
+    }
 
     // Do not perform any work if new and old AppData are identical
-    if (newAppData == _appData) return;
+    if (newAppData == _appData) {
+      debugPrint('Returning as new and old AppData are identical');
+      return;
+    }
 
     // Otherwise, store the new AppData in memory
     _appData = newAppData;

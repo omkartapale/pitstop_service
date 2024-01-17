@@ -2,31 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:pitstop_service/model/service_log.dart';
+import 'package:pitstop_service/notifiers/app_data_notifier.dart';
 import 'package:pitstop_service/super/emergency_contacts_form.dart';
 import 'package:pitstop_service/super/vehicle_spec_form.dart';
 import 'package:pitstop_service/super/widgets/service_log_form.dart';
+import 'package:provider/provider.dart';
 
-class SuperServiceLogs extends StatefulWidget {
+class SuperServiceLogs extends StatelessWidget {
   const SuperServiceLogs({super.key});
 
   @override
-  State<SuperServiceLogs> createState() => _SuperServiceLogsState();
-}
-
-class _SuperServiceLogsState extends State<SuperServiceLogs> {
-  late List<ServiceLog> serviceHistory;
-
-  @override
-  void initState() {
-    // Initialize history list of service logs
-    // serviceHistory = [];
-    // serviceHistory = demoListServiceLogs.reversed.toList();
-    serviceHistory = jsonDemoListServiceLogs.reversed.toList();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final List<ServiceLog> serviceHistory =
+        context.watch<AppDataNotifier>().appData.serviceHistory;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('\$sudo'),
@@ -96,8 +85,8 @@ class _SuperServiceLogsState extends State<SuperServiceLogs> {
                   child: Container(
                     padding: const EdgeInsets.only(top: 4.0),
                     alignment: Alignment.center,
-                    // Show list of service history records
                     child: (serviceHistory.isNotEmpty)
+                        // Show list of service history records
                         ? ListView.separated(
                             itemCount: serviceHistory.length,
                             itemBuilder: (BuildContext context, int index) {
@@ -175,7 +164,10 @@ class _SuperServiceLogsState extends State<SuperServiceLogs> {
                                               Text('Worknotes:'),
                                             ],
                                           ),
-                                          Text(serviceLogItem.worknotes),
+                                          Text(serviceLogItem
+                                                  .worknotes.isNotEmpty
+                                              ? serviceLogItem.worknotes
+                                              : 'NA'),
                                         ],
                                       ),
                                     ),
@@ -214,24 +206,26 @@ class _SuperServiceLogsState extends State<SuperServiceLogs> {
                                               Text('Suggestions:'),
                                             ],
                                           ),
-                                          Text(serviceLogItem.suggestions),
+                                          Text(serviceLogItem
+                                                  .suggestions.isNotEmpty
+                                              ? serviceLogItem.suggestions
+                                              : 'NA'),
                                         ],
                                       ),
                                     ),
                                   ],
                                 ),
-                                onLongPress: () =>
-                                    _confirmDelete(context, serviceLogItem),
+                                onLongPress: () => _confirmDelete(
+                                    context, serviceLogItem, index),
                                 onTap: () => _showBottomSheetForm(
-                                    context, serviceLogItem),
+                                    context, serviceLogItem, index),
                               );
                             },
                             separatorBuilder: (context, index) =>
                                 const Divider(thickness: 1, height: 1),
                           )
-                        :
                         // Show no service history records screen
-                        const Column(
+                        : const Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             // crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -257,7 +251,7 @@ class _SuperServiceLogsState extends State<SuperServiceLogs> {
   }
 
   Future<void> _showBottomSheetForm(BuildContext context,
-      [ServiceLog? serviceLog]) {
+      [ServiceLog? serviceLog, int? index]) {
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -267,6 +261,7 @@ class _SuperServiceLogsState extends State<SuperServiceLogs> {
           child: Container(
             padding: MediaQuery.of(context).viewInsets,
             child: ServiceLogForm(
+              index: index,
               serviceLogItem: serviceLog,
             ),
           ),
@@ -275,7 +270,8 @@ class _SuperServiceLogsState extends State<SuperServiceLogs> {
     );
   }
 
-  Future<void> _confirmDelete(BuildContext context, ServiceLog serviceLog) {
+  Future<void> _confirmDelete(
+      BuildContext context, ServiceLog serviceLog, int index) {
     final ThemeData theme = Theme.of(context);
     final TextStyle textStyle = theme.textTheme.bodyMedium!;
     return showDialog(
@@ -302,6 +298,8 @@ class _SuperServiceLogsState extends State<SuperServiceLogs> {
           ),
           FilledButton(
             onPressed: () {
+              // Delete and persist the Service Log
+              context.read<AppDataNotifier>().deleteServiceLog(index);
               Navigator.pop(ctx);
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text(

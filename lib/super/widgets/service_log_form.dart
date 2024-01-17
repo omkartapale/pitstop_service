@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pitstop_service/model/service_log.dart';
+import 'package:pitstop_service/notifiers/app_data_notifier.dart';
+import 'package:provider/provider.dart';
 
 /// Creates a Service log information Form
 ///
@@ -13,10 +15,13 @@ class ServiceLogForm extends StatefulWidget {
   /// Creates a form for service log.
   ///
   /// The [serviceLogItem] argument is optional.
-  const ServiceLogForm({super.key, this.serviceLogItem});
+  const ServiceLogForm({super.key, this.serviceLogItem, this.index});
 
-  /// Vehicle to load information about.
+  /// Service log to load information about.
   final ServiceLog? serviceLogItem;
+
+  /// Service log index number
+  final int? index;
 
   @override
   State<ServiceLogForm> createState() => _ServiceLogFormState();
@@ -194,7 +199,29 @@ class _ServiceLogFormState extends State<ServiceLogForm> {
                 // Validate will return true if the form is valid, or false if
                 // the form is invalid.
                 if (_formKey.currentState!.validate()) {
+                  _formKey.currentState!.save();
+
                   // Process data.
+                  // Prepare contact object with new data for processing
+                  ServiceLog serviceLog = ServiceLog(
+                    lastServiceDate: _lastServiceDate,
+                    lastOdometer:
+                        int.parse(_lastOdometerController.text.trim()),
+                    worknotes: _worknotesController.text.trim(),
+                    dueServiceDate: _dueServiceDate,
+                    dueOdometer: int.parse(_dueOdometerController.text.trim()),
+                    suggestions: _suggestionsController.text.trim(),
+                  );
+
+                  // Add / Update and persist the Service Log
+                  (_isUpdate)
+                      ? context
+                          .read<AppDataNotifier>()
+                          .updateServiceLog(widget.index!, serviceLog)
+                      : context
+                          .read<AppDataNotifier>()
+                          .addServiceLog(serviceLog);
+
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(

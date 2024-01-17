@@ -43,9 +43,9 @@ class AppData {
 
   /// Get last vehicle service information.
   ///
-  /// Returns last service details from vehicle's service history,
+  /// Returns most recent service details from vehicle's service history,
   /// or null if the history is empty.
-  ServiceLog? get lastServiceLog => serviceHistory.lastOrNull;
+  ServiceLog? get lastServiceLog => serviceHistory.firstOrNull;
 
   /// Get vehicle service due alert status.
   ///
@@ -94,6 +94,32 @@ class AppData {
   /// else returns false.
   bool get showPollutionCheckDueAlert {
     return vehicleSpec.pucValidUpto.difference(DateTime.now()).inDays <= 30;
+  }
+
+  /// Add a new service log to the Service History.
+  ///
+  /// Inserts [serviceLog] at the beginning of the [serviceHistory] list.
+  void addServiceLog(ServiceLog serviceLog) {
+    // Insert at the end of list
+    // serviceHistory.add(serviceLog);
+    // Insert at beginning of list
+    serviceHistory.insert(0, serviceLog);
+  }
+
+  /// Update the existing service log.
+  ///
+  /// Removes the existing service log at [index], and inserts new [serviceLog]
+  /// at the same position.
+  void updateServiceLog(int index, ServiceLog serviceLog) {
+    serviceHistory.removeAt(index);
+    serviceHistory.insert(index, serviceLog);
+  }
+
+  /// Delete the service log.
+  ///
+  /// Removes the service log at position [index] from [serviceHistory].
+  void deleteServiceLog(int index) {
+    serviceHistory.removeAt(index);
   }
 
   /// Factory constructor for creating a new [AppData] instance
@@ -152,29 +178,12 @@ const demoAppDataJsonString = '''
     "licensePlate": "MH11 A 1010",
     "maxPower": "74bhp @ 5400rpm",
     "capacity": "1198cc",
-    "cylinder": "3 Inline, SOHC",
+    "cylinder": "3 Inline, 12 Valves, SOHC",
     "fitnessValidUpto": 1949941800000,
     "insuranceValidUpto": 1729103400000,
     "pucValidUpto": 1702751400000
   },
-  "serviceHistory": [
-    {
-      "lastServiceDate": 1686528000000,
-      "lastOdometer": 4000,
-      "worknotes": "Brake Oil, Brake Pads, Engine Tuneup",
-      "dueServiceDate": 1699747200000,
-      "dueOdometer": 5000,
-      "suggestions": "Brake Oil, Calliper Pin"
-    },
-    {
-      "lastServiceDate": 1699747200000,
-      "lastOdometer": 5000,
-      "worknotes": "Brake Oil, Throttle Cleaning, Engine Tuneup",
-      "dueServiceDate": 1710201600000,
-      "dueOdometer": 6000,
-      "suggestions": "Brake Oil, Calliper Pin"
-    }
-  ],
+  "serviceHistory": [],
   "primaryContact": {
     "name": "Primary Person",
     "relation": "relative",
