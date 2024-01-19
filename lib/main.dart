@@ -32,6 +32,9 @@ Future<void> main() async {
   LicenseRegistry.addLicense(() async* {
     final license = await rootBundle.loadString('google_fonts/OFL.txt');
     yield LicenseEntryWithLineBreaks(['google_fonts'], license);
+    final sketchfab =
+        await rootBundle.loadString('assets/sketchfab_attribution.txt');
+    yield LicenseEntryWithLineBreaks(['sketchfab'], sketchfab);
   });
 
   // To retrive app data from file storage into memory for app and further

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pitstop_service/super/super_app.dart';
 
 class About extends StatefulWidget {
@@ -9,6 +10,15 @@ class About extends StatefulWidget {
 }
 
 class _AboutState extends State<About> {
+  PackageInfo _packageInfo = PackageInfo(
+    appName: 'Unknown',
+    packageName: 'Unknown',
+    version: 'Unknown',
+    buildNumber: 'Unknown',
+    buildSignature: 'Unknown',
+    installerStore: 'Unknown',
+  );
+
   int _counter = 0;
 
   void _incrementCounter() {
@@ -21,6 +31,19 @@ class _AboutState extends State<About> {
         _counter = 0;
       });
     }
+  }
+
+  Future<void> _initPackageInfo() async {
+    final info = await PackageInfo.fromPlatform();
+    setState(() {
+      _packageInfo = info;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initPackageInfo();
   }
 
   @override
@@ -69,11 +92,23 @@ class _AboutState extends State<About> {
                         '\u00a9 2024 Tech4Geek Solutions',
                         // style: Theme.of(context).textTheme.displaySmall,
                       ),
-                      const Text(
-                        'Version: 2023.12.31',
-                        // style: Theme.of(context).textTheme.displaySmall,
+                      const SizedBox(height: 16.0),
+                      Text(
+                        'v${_packageInfo.version} build ${_packageInfo.buildNumber}\n${_packageInfo.buildSignature}',
+                        textAlign: TextAlign.center,
                       ),
+
                       // const Spacer(),
+                      // _infoTile('App name', _packageInfo.appName),
+                      // _infoTile('Package name', _packageInfo.packageName),
+                      // _infoTile('App version', _packageInfo.version),
+                      // _infoTile('Build number', _packageInfo.buildNumber),
+                      // _infoTile('Build signature', _packageInfo.buildSignature),
+                      // _infoTile(
+                      //   'Installer store',
+                      //   _packageInfo.installerStore ?? 'not available',
+                      // ),
+                      const SizedBox(height: 16.0),
                       TextButton.icon(
                         onPressed: () {
                           showLicensePage(
@@ -81,7 +116,7 @@ class _AboutState extends State<About> {
                             applicationName: 'KD\'s Pitstop Service Log',
                             // applicationVersion: 'Dec 2023',
                             applicationLegalese:
-                                '\u00a9 2023 Tech4Geek Solutions',
+                                '\u00a9 2024 Tech4Geek Solutions',
                           );
                         },
                         icon: const Icon(Icons.workspace_premium),
@@ -142,4 +177,11 @@ class _AboutState extends State<About> {
       ),
     );
   }
+
+  // Widget _infoTile(String title, String subtitle) {
+  //   return ListTile(
+  //     title: Text(title),
+  //     subtitle: Text(subtitle.isEmpty ? 'Not set' : subtitle),
+  //   );
+  // }
 }
