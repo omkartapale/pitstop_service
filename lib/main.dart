@@ -120,7 +120,10 @@ class MainApp extends StatelessWidget {
           Locale('en', 'US'), // English US
           Locale('en', 'IN'), // English India
         ],
-        theme: ThemeData(textTheme: GoogleFonts.poppinsTextTheme()),
+        theme: ThemeData(
+          textTheme: GoogleFonts.poppinsTextTheme(),
+          colorSchemeSeed: Colors.amber,
+        ),
         // darkTheme: ThemeData.dark().copyWith(
         //     textTheme: GoogleFonts.poppinsTextTheme(
         //         ThemeData(brightness: Brightness.dark).textTheme)),
