@@ -5,7 +5,7 @@ import 'package:pitstop_service/notifiers/app_data_notifier.dart';
 import 'package:provider/provider.dart';
 
 /// Widget Class: Renders Last Service card for dashboard
-class LastServiceCard extends StatefulWidget {
+class LastServiceCard extends StatelessWidget {
   /// Last service card widget
   ///
   /// Renders Card UI to provides vehicle's last servicing details like last
@@ -13,32 +13,12 @@ class LastServiceCard extends StatefulWidget {
   const LastServiceCard({super.key});
 
   @override
-  State<LastServiceCard> createState() => _LastServiceCardState();
-}
-
-class _LastServiceCardState extends State<LastServiceCard> {
-  // late DateTime lastServiceDate;
-  // late int lastOdometer;
-  // late List<String> worknotes;
-  late ServiceLog? _lastServiceLog;
-
-  @override
-  void initState() {
-    // Initialize last service information
-    _lastServiceLog = context.read<AppDataNotifier>().appData.lastServiceLog;
-    // lastServiceDate = DateTime(2023, 1, 12);
-    // lastOdometer = 600;
-    // worknotes = 'Brake Oil,Calliper Pin'
-    //     .split(',')
-    //     .where((e) => e.trim().isNotEmpty)
-    //     .toList();
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return (_lastServiceLog != null)
+    // Get last service information
+    final ServiceLog? lastServiceLog =
+        context.watch<AppDataNotifier>().appData.lastServiceLog;
+
+    return (lastServiceLog != null)
         ? Card(
             color: Colors.yellow.shade100,
             shadowColor: Colors.transparent,
@@ -65,7 +45,7 @@ class _LastServiceCardState extends State<LastServiceCard> {
                             ),
                             Text(
                               DateFormat("dd MMM ''yy")
-                                  .format(_lastServiceLog!.lastServiceDate),
+                                  .format(lastServiceLog.lastServiceDate),
                               style: Theme.of(context).textTheme.titleSmall,
                             ),
                           ],
@@ -81,7 +61,7 @@ class _LastServiceCardState extends State<LastServiceCard> {
                               style: Theme.of(context).textTheme.labelSmall,
                             ),
                             Text(
-                              '${_lastServiceLog!.lastOdometer} kms',
+                              '${lastServiceLog.lastOdometer} kms',
                               style: Theme.of(context).textTheme.titleSmall,
                             ),
                           ],
@@ -90,15 +70,15 @@ class _LastServiceCardState extends State<LastServiceCard> {
                     ],
                   ),
                   const SizedBox(height: 8.0),
-                  if (_lastServiceLog!.worknotes.isNotEmpty)
+                  if (lastServiceLog.worknotes.isNotEmpty)
                     Text(
                       'Worknotes'.toUpperCase(),
                       style: Theme.of(context).textTheme.labelSmall,
                     ),
-                  if (_lastServiceLog!.worknotes.isNotEmpty)
+                  if (lastServiceLog.worknotes.isNotEmpty)
                     Wrap(
                       spacing: 8.0,
-                      children: _lastServiceLog!.worknotesList
+                      children: lastServiceLog.worknotesList
                           .map(
                             (note) => Chip(
                               visualDensity: VisualDensity.compact,

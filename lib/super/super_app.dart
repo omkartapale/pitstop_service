@@ -4,14 +4,9 @@ import 'package:pitstop_service/super/emergency_contacts_form.dart';
 import 'package:pitstop_service/super/service_logs.dart';
 import 'package:pitstop_service/super/vehicle_spec_form.dart';
 
-class SuperApp extends StatefulWidget {
+class SuperApp extends StatelessWidget {
   const SuperApp({super.key});
 
-  @override
-  State<SuperApp> createState() => _SuperAppState();
-}
-
-class _SuperAppState extends State<SuperApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -171,6 +166,7 @@ class _SuperAppState extends State<SuperApp> {
                   ),
                 ),
               ),
+              const SizedBox(height: 12.0),
             ]),
           ),
         ),
