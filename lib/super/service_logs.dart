@@ -50,7 +50,6 @@ class SuperServiceLogs extends StatelessWidget {
           ),
           IconButton(
             onPressed: () {
-              // Navigator.popUntil(context, (route) => false);
               SystemNavigator.pop();
             },
             icon: const Icon(Icons.exit_to_app),
@@ -227,7 +226,6 @@ class SuperServiceLogs extends StatelessWidget {
                         // Show no service history records screen
                         : const Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            // crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Icon(
                                 Icons.error_outline,

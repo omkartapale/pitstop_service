@@ -10,7 +10,7 @@ class About extends StatefulWidget {
 }
 
 class _AboutState extends State<About> {
-  PackageInfo _packageInfo = PackageInfo(
+  late PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
     packageName: 'Unknown',
     version: 'Unknown',
@@ -70,7 +70,6 @@ class _AboutState extends State<About> {
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       InkWell(
                         onTap: _incrementCounter,
@@ -78,11 +77,6 @@ class _AboutState extends State<About> {
                         highlightColor: Colors.transparent,
                         child: Image.asset('assets/logo.png'),
                       ),
-                      // const SizedBox(height: 8.0),
-                      // Text(
-                      //   'KD\'s Pitstop',
-                      //   style: Theme.of(context).textTheme.displaySmall,
-                      // ),
                       Text(
                         'Service Log Application',
                         style: Theme.of(context).textTheme.titleLarge,
@@ -90,31 +84,19 @@ class _AboutState extends State<About> {
                       const SizedBox(height: 16.0),
                       const Text(
                         '\u00a9 2024 Tech4Geek Solutions',
-                        // style: Theme.of(context).textTheme.displaySmall,
                       ),
                       const SizedBox(height: 16.0),
                       Text(
                         'v${_packageInfo.version} build ${_packageInfo.buildNumber}\n${_packageInfo.buildSignature}',
                         textAlign: TextAlign.center,
                       ),
-
                       // const Spacer(),
-                      // _infoTile('App name', _packageInfo.appName),
-                      // _infoTile('Package name', _packageInfo.packageName),
-                      // _infoTile('App version', _packageInfo.version),
-                      // _infoTile('Build number', _packageInfo.buildNumber),
-                      // _infoTile('Build signature', _packageInfo.buildSignature),
-                      // _infoTile(
-                      //   'Installer store',
-                      //   _packageInfo.installerStore ?? 'not available',
-                      // ),
                       const SizedBox(height: 16.0),
                       TextButton.icon(
                         onPressed: () {
                           showLicensePage(
                             context: context,
                             applicationName: 'KD\'s Pitstop Service Log',
-                            // applicationVersion: 'Dec 2023',
                             applicationLegalese:
                                 '\u00a9 2024 Tech4Geek Solutions',
                           );
@@ -177,11 +159,4 @@ class _AboutState extends State<About> {
       ),
     );
   }
-
-  // Widget _infoTile(String title, String subtitle) {
-  //   return ListTile(
-  //     title: Text(title),
-  //     subtitle: Text(subtitle.isEmpty ? 'Not set' : subtitle),
-  //   );
-  // }
 }

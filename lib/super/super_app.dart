@@ -20,7 +20,6 @@ class SuperApp extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              // Navigator.popUntil(context, (route) => false);
               SystemNavigator.pop();
             },
             icon: const Icon(Icons.exit_to_app),
@@ -51,7 +50,6 @@ class SuperApp extends StatelessWidget {
                   alignment: Alignment.center,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'Specifications',
@@ -92,7 +90,6 @@ class SuperApp extends StatelessWidget {
                   alignment: Alignment.center,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'Service Logs',
@@ -133,7 +130,6 @@ class SuperApp extends StatelessWidget {
                   alignment: Alignment.center,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'Emergency Help',

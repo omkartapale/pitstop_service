@@ -47,8 +47,6 @@ class _SuperVehicleSpecificationFormState
   initState() {
     // Initialize vehicles spec object
     vSpec = context.read<AppDataNotifier>().appData.vehicleSpec;
-    // vSpec = jsonDemoVehicleSpec;
-    // vSpec = demoVehicleSpec;
 
     // Populate controllers and state vars with vehicle specifications
     _manufacturerController.text = vSpec.manufacturer;
@@ -127,7 +125,6 @@ class _SuperVehicleSpecificationFormState
           ),
           IconButton(
             onPressed: () {
-              // Navigator.popUntil(context, (route) => false);
               SystemNavigator.pop();
             },
             icon: const Icon(Icons.exit_to_app),

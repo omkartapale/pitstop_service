@@ -36,12 +36,8 @@ class _SuperEmergencyContactsFormState
   @override
   void initState() {
     // Initialize primary and secondary contacts
-    // primary = demoPrimary;
-    // secondary = demoSecondary;
     primary = context.read<AppDataNotifier>().appData.primaryContact;
-    // primary = jsonDemoPrimaryContact;
     secondary = context.read<AppDataNotifier>().appData.secondaryContact;
-    // secondary = jsonDemoSecondaryContact;
 
     // Init controllers for primary contact
     _primaryNameController.text = primary.name;
@@ -102,7 +98,6 @@ class _SuperEmergencyContactsFormState
           ),
           IconButton(
             onPressed: () {
-              // Navigator.popUntil(context, (route) => false);
               SystemNavigator.pop();
             },
             icon: const Icon(Icons.exit_to_app),

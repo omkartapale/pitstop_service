@@ -19,7 +19,6 @@ class ConnectWithUsCard extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         alignment: Alignment.topLeft,
         child: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(

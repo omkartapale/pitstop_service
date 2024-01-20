@@ -91,20 +91,6 @@ class EmergencyContact {
   }
 }
 
-/// Demo primary Emergency contact instance of [EmergencyContact] class.
-const EmergencyContact demoPrimary = EmergencyContact(
-  name: 'Primary Person',
-  relation: ContactRelation.relative,
-  number: '9876543210',
-);
-
-/// Demo secondary Emergency contact instance of [EmergencyContact] class.
-const EmergencyContact demoSecondary = EmergencyContact(
-  name: 'Secondary Person',
-  relation: ContactRelation.friend,
-  number: '9876543211',
-);
-
 /// Demo primary Emergency contact JSON string representing instance of
 /// [EmergencyContact] class.
 const demoPrimaryJsonString = '''

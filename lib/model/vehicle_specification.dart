@@ -269,23 +269,6 @@ class VehicleSpecification {
   }
 }
 
-/// Demo instance of [VehicleSpecification] class.
-final VehicleSpecification demoVehicleSpec = VehicleSpecification(
-  manufacturer: 'Volkswagen',
-  model: 'Ameo',
-  variant: '1.2L MPI Highline',
-  makeYear: 2016,
-  transmission: Transmission.manual,
-  fuel: FuelType.petrol,
-  licensePlate: 'MH11 BV 8183',
-  maxPower: '74bhp @ 5400rpm',
-  capacity: '1198cc',
-  cylinder: '3 Inline, SOHC',
-  fitnessValidUpto: DateTime.fromMillisecondsSinceEpoch(1949941800000),
-  insuranceValidUpto: DateTime.fromMillisecondsSinceEpoch(1729103400000),
-  pucValidUpto: DateTime.fromMillisecondsSinceEpoch(1702751400000),
-);
-
 /// Demo JSON string representing instance of [VehicleSpecification] class.
 const demoVehicleSpecJsonString = '''
 {
