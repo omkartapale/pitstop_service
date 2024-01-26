@@ -4,14 +4,9 @@ import 'package:pitstop_service/super/emergency_contacts_form.dart';
 import 'package:pitstop_service/super/service_logs.dart';
 import 'package:pitstop_service/super/vehicle_spec_form.dart';
 
-class SuperApp extends StatefulWidget {
+class SuperApp extends StatelessWidget {
   const SuperApp({super.key});
 
-  @override
-  State<SuperApp> createState() => _SuperAppState();
-}
-
-class _SuperAppState extends State<SuperApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +20,6 @@ class _SuperAppState extends State<SuperApp> {
         actions: [
           IconButton(
             onPressed: () {
-              // Navigator.popUntil(context, (route) => false);
               SystemNavigator.pop();
             },
             icon: const Icon(Icons.exit_to_app),
@@ -56,7 +50,6 @@ class _SuperAppState extends State<SuperApp> {
                   alignment: Alignment.center,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'Specifications',
@@ -97,7 +90,6 @@ class _SuperAppState extends State<SuperApp> {
                   alignment: Alignment.center,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'Service Logs',
@@ -138,7 +130,6 @@ class _SuperAppState extends State<SuperApp> {
                   alignment: Alignment.center,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'Emergency Help',
@@ -171,6 +162,7 @@ class _SuperAppState extends State<SuperApp> {
                   ),
                 ),
               ),
+              const SizedBox(height: 12.0),
             ]),
           ),
         ),

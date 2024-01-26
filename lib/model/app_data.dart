@@ -100,8 +100,6 @@ class AppData {
   ///
   /// Inserts [serviceLog] at the beginning of the [serviceHistory] list.
   void addServiceLog(ServiceLog serviceLog) {
-    // Insert at the end of list
-    // serviceHistory.add(serviceLog);
     // Insert at beginning of list
     serviceHistory.insert(0, serviceLog);
   }
@@ -127,14 +125,9 @@ class AppData {
   factory AppData.fromJson(Map<String, dynamic> json) {
     return AppData(
       vehicleSpec: VehicleSpecification.fromJson(json['vehicleSpec']),
-      // serviceHistory: json['serviceHistory'] != null
-      //     ? json['serviceHistory']
-      //         // map each history to a Service Log object
-      //         .map<ServiceLog>((serviceLog) => ServiceLog.fromJson(serviceLog))
-      //         .toList() // map() returns an Iterable so we convert it to a List
-      //     : <ServiceLog>[], // use an empty list as fallback value
       serviceHistory: json['serviceHistory']
-          // map each history to a Service Log object
+          // map each history to a Service Log object and return list,
+          // if no element in map return empty list
           .map<ServiceLog>((serviceLog) => ServiceLog.fromJson(serviceLog))
           .toList(), // map() returns an Iterable so we convert it to a List
       primaryContact: EmergencyContact.fromJson(json['primaryContact']),
@@ -155,15 +148,6 @@ class AppData {
     return data;
   }
 }
-
-/// Demo [AppData] instance using constructor.
-final AppData demoAppData = AppData(
-  vehicleSpec: demoVehicleSpec,
-  serviceHistory: demoListServiceLogs,
-  primaryContact: demoPrimary,
-  secondaryContact: demoSecondary,
-  version: 1,
-);
 
 /// Demo JSON string representing [AppData] instance.
 const demoAppDataJsonString = '''

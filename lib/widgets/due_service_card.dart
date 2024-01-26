@@ -5,7 +5,7 @@ import 'package:pitstop_service/notifiers/app_data_notifier.dart';
 import 'package:provider/provider.dart';
 
 /// Widget Class: Renders Due Service card for dashboard
-class DueServiceCard extends StatefulWidget {
+class DueServiceCard extends StatelessWidget {
   /// Connect with us widget
   ///
   /// Renders Card UI to provides vehicle's next servicing due details like next
@@ -18,44 +18,14 @@ class DueServiceCard extends StatefulWidget {
   const DueServiceCard({super.key});
 
   @override
-  State<DueServiceCard> createState() => _DueServiceCardState();
-}
-
-class _DueServiceCardState extends State<DueServiceCard> {
-  // late DateTime dueServiceDate;
-  // late int dueOdometer;
-  // late List<String> suggestions;
-  late ServiceLog? _lastServiceLog;
-  late bool _isServiceNearDue;
-
-  @override
-  void initState() {
-    // Initialize last service information
-    _lastServiceLog = context.read<AppDataNotifier>().appData.lastServiceLog;
-    _isServiceNearDue =
-        context.read<AppDataNotifier>().appData.showServiceDueAlert;
-    // Initialize due service information
-    // dueServiceDate = context
-    //     .read<AppDataNotifier>()
-    //     .appData
-    //     .serviceHistory
-    //     .last
-    //     .dueServiceDate;
-    // dueServiceDate = DateTime(2024, 1, 24);
-    // dueOdometer = 1600;
-    // suggestions = 'Gear Oil,Throttle Cleanup'
-    //     .split(',')
-    //     .where((e) => e.trim().isNotEmpty)
-    //     .toList();
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return (_lastServiceLog != null)
+    // Get last service information
+    final ServiceLog? lastServiceLog =
+        context.watch<AppDataNotifier>().appData.lastServiceLog;
+
+    return (lastServiceLog != null)
         ? Card(
-            color: _isServiceNearDue
+            color: context.watch<AppDataNotifier>().appData.showServiceDueAlert
                 ? Colors.red.shade100
                 : Colors.yellow.shade100,
             shadowColor: Colors.transparent,
@@ -71,7 +41,10 @@ class _DueServiceCardState extends State<DueServiceCard> {
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                       const SizedBox(width: 8.0),
-                      _isServiceNearDue
+                      context
+                              .watch<AppDataNotifier>()
+                              .appData
+                              .showServiceDueAlert
                           ? const Icon(
                               Icons.error_outline_rounded,
                               color: Colors.deepOrange,
@@ -93,7 +66,7 @@ class _DueServiceCardState extends State<DueServiceCard> {
                             ),
                             Text(
                               DateFormat("dd MMM ''yy")
-                                  .format(_lastServiceLog!.dueServiceDate),
+                                  .format(lastServiceLog.dueServiceDate),
                               style: Theme.of(context).textTheme.titleSmall,
                             ),
                           ],
@@ -109,7 +82,7 @@ class _DueServiceCardState extends State<DueServiceCard> {
                               style: Theme.of(context).textTheme.labelSmall,
                             ),
                             Text(
-                              '${_lastServiceLog!.dueOdometer} kms',
+                              '${lastServiceLog.dueOdometer} kms',
                               style: Theme.of(context).textTheme.titleSmall,
                             ),
                           ],
@@ -118,15 +91,15 @@ class _DueServiceCardState extends State<DueServiceCard> {
                     ],
                   ),
                   const SizedBox(height: 8.0),
-                  if (_lastServiceLog!.suggestionsList.isNotEmpty)
+                  if (lastServiceLog.suggestionsList.isNotEmpty)
                     Text(
                       'Suggestions'.toUpperCase(),
                       style: Theme.of(context).textTheme.labelSmall,
                     ),
-                  if (_lastServiceLog!.suggestionsList.isNotEmpty)
+                  if (lastServiceLog.suggestionsList.isNotEmpty)
                     Wrap(
                       spacing: 8.0,
-                      children: _lastServiceLog!.suggestionsList
+                      children: lastServiceLog.suggestionsList
                           .map(
                             (note) => Chip(
                               visualDensity: VisualDensity.compact,

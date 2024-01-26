@@ -11,34 +11,23 @@ import 'package:pitstop_service/services/app_data_service.dart';
 /// [ChangeNotifier] glue Data Services to Flutter Widgets. The [AppDataNotifier]
 /// uses the [AppDataService] to store and retrieve vehicle's app data.
 class AppDataNotifier with ChangeNotifier {
-  // Optimization Note to self
-  //
-  // You can optimize AppDataNotifier by calling load() within the constructor
-  // and initialize AppDataService _storageService locally.
-  // That way it will reduce the complexity of the code and won't need to call
-  // load() in main(). This will automatically execute load() when we create
-  // instance of it in main().
-  //
-  // Ref: Firebase Quickstarts for Flutter Github -> messaging example.
-
-  /// Create [AppDataNotifier] ChangeNotifier instance with intializing
-  /// [AppDataService].
-  AppDataNotifier(this._storageService);
-
-  // Make AppDataService a private variable so it is not used directly.
-  final AppDataService _storageService;
+  /// Create [AppDataNotifier] ChangeNotifier instance.
+  /// Intialization of [AppDataService] and [load] the vehicle's app data from
+  /// local file storage is done while the object instantiated.
+  AppDataNotifier() {
+    // Read data from local file storage
+    load();
+  }
 
   // Make AppDataService a private variable so it is not used directly and
   // intialize its instance.
-  //
-  // This can be initialized locally, that way it'll be easier to create
-  // instance of AppDataNotifier class without initializing or passing
-  // AppDataStorage constructor. Initialize it as shown in comment below.
-  // final AppDataService _storageService = AppDataService();
+  final AppDataService _storageService = AppDataService();
 
   // Make AppData a private variable so it is not updated directly without
   // also persisting the changes with the AppDataService.
-  late AppData _appData;
+  // Temporary dummy data assignment to avoid LateError
+  // (LateInitializationError: Field '_appData@########' has not been initialized.)
+  late AppData _appData = jsonDemoAppData;
 
   /// Allow Widgets to read the Vehicle's AppData.
   AppData get appData => _appData;

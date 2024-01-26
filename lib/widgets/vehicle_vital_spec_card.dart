@@ -145,7 +145,6 @@ class VehicleVitalSpecCard extends StatelessWidget {
     return showDatePicker(
       context: context,
       currentDate: DateTime.now(),
-      // firstDate: DateTime(2016, 10, 17), // registration date or todays date can be good too
       firstDate: DateTime(2023), // 1st Jan 2023
       lastDate: DateTime(2100, 12, 31), // 31st Dec 2100
       initialDate: context
@@ -174,7 +173,6 @@ class VehicleVitalSpecCard extends StatelessWidget {
     return showDatePicker(
       context: context,
       currentDate: DateTime.now(),
-      // firstDate: insuranceExpiry, // current expiry date
       firstDate: DateTime(2023), // 1st Jan 2023
       lastDate: DateTime(2100, 12, 31), // 31st Dec 2100
       initialDate: context

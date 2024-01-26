@@ -23,7 +23,6 @@ class EmergencyContactsCard extends StatelessWidget {
       shadowColor: Colors.transparent,
       clipBehavior: Clip.hardEdge,
       child: Column(
-        // mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
@@ -59,7 +58,6 @@ class EmergencyContactsCard extends StatelessWidget {
                   context, dataStore.appData.primaryContact, true),
             ),
           ),
-
           Consumer<AppDataNotifier>(
             builder: (context, dataStore, child) => ListTile(
               leading: const Icon(Icons.person_outline_rounded),
@@ -77,19 +75,6 @@ class EmergencyContactsCard extends StatelessWidget {
                   context, dataStore.appData.secondaryContact, false),
             ),
           ),
-          // ListTile(
-          //   leading: const Icon(Icons.car_repair),
-          //   title: const Text('Emergency Garage'),
-          //   subtitle: const Text(
-          //     'KD Car Care Service Helpline\n'
-          //     '+91 855 485 1010',
-          //   ),
-          //   trailing: IconButton.filled(
-          //     onPressed: () => ContactHelper.makePhoneCall('8554851010'),
-          //     color: Colors.white,
-          //     icon: const Icon(Icons.phone),
-          //   ),
-          // ),
           ListTile(
             leading: const Icon(Icons.assistant_direction_outlined),
             title: const Text('NHAI Toll Free Helpline 24x7'),

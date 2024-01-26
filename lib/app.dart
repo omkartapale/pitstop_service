@@ -43,7 +43,7 @@ class _ServiceAppState extends State<ServiceApp> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.published_with_changes),
+          icon: const Icon(Icons.menu),
           onPressed: () {
             setState(() {
               _selectedIndex = 0;
@@ -60,19 +60,10 @@ class _ServiceAppState extends State<ServiceApp> {
               // leading: Column(
               //   children: [
               //     IconButton(
-              //         icon: const Icon(Icons.published_with_changes),
+              //         icon: const Icon(Icons.menu),
               //         onPressed: () {}),
               //     const SizedBox(height: 8.0),
               //   ],
-              // ),
-              // leading:
-              //     IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
-              // trailing: FloatingActionButton(
-              //   elevation: 0,
-              //   onPressed: () {
-              //     // Add your onPressed code here!
-              //   },
-              //   child: const Icon(Icons.add),
               // ),
               // groupAlignment: 0,
               selectedIndex: _selectedIndex,

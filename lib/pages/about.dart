@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pitstop_service/super/super_app.dart';
+import 'package:pitstop_service/widgets/webview.dart';
 
 class About extends StatefulWidget {
   const About({super.key});
@@ -9,6 +11,15 @@ class About extends StatefulWidget {
 }
 
 class _AboutState extends State<About> {
+  late PackageInfo _packageInfo = PackageInfo(
+    appName: 'Unknown',
+    packageName: 'Unknown',
+    version: 'Unknown',
+    buildNumber: 'Unknown',
+    buildSignature: 'Unknown',
+    installerStore: 'Unknown',
+  );
+
   int _counter = 0;
 
   void _incrementCounter() {
@@ -21,6 +32,19 @@ class _AboutState extends State<About> {
         _counter = 0;
       });
     }
+  }
+
+  Future<void> _initPackageInfo() async {
+    final info = await PackageInfo.fromPlatform();
+    setState(() {
+      _packageInfo = info;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initPackageInfo();
   }
 
   @override
@@ -47,7 +71,6 @@ class _AboutState extends State<About> {
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       InkWell(
                         onTap: _incrementCounter,
@@ -55,11 +78,6 @@ class _AboutState extends State<About> {
                         highlightColor: Colors.transparent,
                         child: Image.asset('assets/logo.png'),
                       ),
-                      // const SizedBox(height: 8.0),
-                      // Text(
-                      //   'KD\'s Pitstop',
-                      //   style: Theme.of(context).textTheme.displaySmall,
-                      // ),
                       Text(
                         'Service Log Application',
                         style: Theme.of(context).textTheme.titleLarge,
@@ -67,26 +85,56 @@ class _AboutState extends State<About> {
                       const SizedBox(height: 16.0),
                       const Text(
                         '\u00a9 2024 Tech4Geek Solutions',
-                        // style: Theme.of(context).textTheme.displaySmall,
                       ),
-                      const Text(
-                        'Version: 2023.12.31',
-                        // style: Theme.of(context).textTheme.displaySmall,
+                      const SizedBox(height: 16.0),
+                      Text(
+                        'v${_packageInfo.version} build ${_packageInfo.buildNumber}\n${_packageInfo.buildSignature}',
+                        textAlign: TextAlign.center,
                       ),
                       // const Spacer(),
-                      TextButton.icon(
-                        onPressed: () {
-                          showLicensePage(
-                            context: context,
-                            applicationName: 'KD\'s Pitstop Service Log',
-                            // applicationVersion: 'Dec 2023',
-                            applicationLegalese:
-                                '\u00a9 2023 Tech4Geek Solutions',
-                          );
-                        },
-                        icon: const Icon(Icons.workspace_premium),
-                        label: const Text('Open-Source licenses'),
+                      const SizedBox(height: 16.0),
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        children: [
+                          TextButton.icon(
+                            onPressed: () {
+                              showWebViewPage(
+                                context: context,
+                                requestUriPath:
+                                    'https://tech4geek.github.io/kds-pitstop-service/terms_of_use.htm',
+                                title: 'Terms of Use',
+                              );
+                            },
+                            icon: const Icon(Icons.handshake),
+                            label: const Text('Terms of Use'),
+                          ),
+                          TextButton.icon(
+                            onPressed: () {
+                              showWebViewPage(
+                                context: context,
+                                requestUriPath:
+                                    'https://tech4geek.github.io/kds-pitstop-service/privacy_policy.htm',
+                                title: 'Privacy Policy',
+                              );
+                            },
+                            icon: const Icon(Icons.policy),
+                            label: const Text('Privacy Policy'),
+                          ),
+                          TextButton.icon(
+                            onPressed: () {
+                              showLicensePage(
+                                context: context,
+                                applicationName: 'KD\'s Pitstop Service Log',
+                                applicationLegalese:
+                                    '\u00a9 2024 Tech4Geek Solutions',
+                              );
+                            },
+                            icon: const Icon(Icons.workspace_premium),
+                            label: const Text('Third-party Licences'),
+                          ),
+                        ],
                       ),
+                      const SizedBox(height: 16.0),
                     ],
                   ),
                 ),
@@ -141,5 +189,20 @@ class _AboutState extends State<About> {
         ),
       ),
     );
+  }
+
+  void showWebViewPage({
+    required BuildContext context,
+    required String requestUriPath,
+    String? title,
+    bool useRootNavigator = false,
+  }) {
+    Navigator.of(context, rootNavigator: useRootNavigator)
+        .push(MaterialPageRoute<void>(
+      builder: (BuildContext context) => WebViewPage(
+        requestUriPath: requestUriPath,
+        title: title,
+      ),
+    ));
   }
 }

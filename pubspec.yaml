@@ -1,7 +1,7 @@
 name: pitstop_service
-description: "KD's Pitstop Service Book Application"
+description: "KD's Pitstop Service Log Application"
 publish_to: 'none'
-version: 0.1.0
+version: 0.1.0+240119
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
@@ -14,9 +14,11 @@ dependencies:
   google_fonts: ^6.1.0
   intl: ^0.18.1
   o3d: ^3.1.0
+  package_info_plus: ^5.0.1
   path_provider: ^2.1.1
   provider: ^6.1.1
   url_launcher: ^6.2.2
+  webview_flutter: ^4.4.4
 
 dev_dependencies:
   flutter_test:
