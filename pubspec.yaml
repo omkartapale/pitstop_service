@@ -1,7 +1,7 @@
 name: pitstop_service
 description: "KD's Pitstop Service Log Application"
 publish_to: 'none'
-version: 0.1.0+240119
+version: 1.0.0+240126
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
