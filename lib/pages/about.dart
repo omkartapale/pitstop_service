@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pitstop_service/super/super_app.dart';
+import 'package:pitstop_service/widgets/webview.dart';
 
 class About extends StatefulWidget {
   const About({super.key});
@@ -92,18 +93,48 @@ class _AboutState extends State<About> {
                       ),
                       // const Spacer(),
                       const SizedBox(height: 16.0),
-                      TextButton.icon(
-                        onPressed: () {
-                          showLicensePage(
-                            context: context,
-                            applicationName: 'KD\'s Pitstop Service Log',
-                            applicationLegalese:
-                                '\u00a9 2024 Tech4Geek Solutions',
-                          );
-                        },
-                        icon: const Icon(Icons.workspace_premium),
-                        label: const Text('Open-Source licenses'),
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        children: [
+                          TextButton.icon(
+                            onPressed: () {
+                              showWebViewPage(
+                                context: context,
+                                requestUriPath:
+                                    'https://tech4geek.github.io/kds-pitstop-service/terms_of_use.htm',
+                                title: 'Terms of Use',
+                              );
+                            },
+                            icon: const Icon(Icons.handshake),
+                            label: const Text('Terms of Use'),
+                          ),
+                          TextButton.icon(
+                            onPressed: () {
+                              showWebViewPage(
+                                context: context,
+                                requestUriPath:
+                                    'https://tech4geek.github.io/kds-pitstop-service/privacy_policy.htm',
+                                title: 'Privacy Policy',
+                              );
+                            },
+                            icon: const Icon(Icons.policy),
+                            label: const Text('Privacy Policy'),
+                          ),
+                          TextButton.icon(
+                            onPressed: () {
+                              showLicensePage(
+                                context: context,
+                                applicationName: 'KD\'s Pitstop Service Log',
+                                applicationLegalese:
+                                    '\u00a9 2024 Tech4Geek Solutions',
+                              );
+                            },
+                            icon: const Icon(Icons.workspace_premium),
+                            label: const Text('Third-party Licences'),
+                          ),
+                        ],
                       ),
+                      const SizedBox(height: 16.0),
                     ],
                   ),
                 ),
@@ -158,5 +189,20 @@ class _AboutState extends State<About> {
         ),
       ),
     );
+  }
+
+  void showWebViewPage({
+    required BuildContext context,
+    required String requestUriPath,
+    String? title,
+    bool useRootNavigator = false,
+  }) {
+    Navigator.of(context, rootNavigator: useRootNavigator)
+        .push(MaterialPageRoute<void>(
+      builder: (BuildContext context) => WebViewPage(
+        requestUriPath: requestUriPath,
+        title: title,
+      ),
+    ));
   }
 }
